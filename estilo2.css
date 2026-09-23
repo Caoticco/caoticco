@@ -1,0 +1,459 @@
+```css
+/* =========================================================
+   CAÓTICCO — NOSOTROS
+========================================================= */
+
+.about-nav {
+  width: 100%;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4vw;
+  gap: 2rem;
+}
+
+.about-logo {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.about-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.about-nav-links a,
+.about-shop {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.about-nav-links a:hover,
+.about-shop:hover {
+  color: var(--wine-bright);
+}
+
+
+/* =========================================================
+   HERO NOSOTROS
+========================================================= */
+
+.about-hero {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 8rem 7vw;
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(
+      circle at 70% 45%,
+      rgba(118, 29, 34, 0.22),
+      transparent 35%
+    ),
+    #080707;
+}
+
+.about-hero-number {
+  position: absolute;
+  top: 2rem;
+  left: 3vw;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 7rem;
+  font-weight: 900;
+  line-height: 0.7;
+
+  color: rgba(244,240,235,0.08);
+}
+
+.about-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 850px;
+}
+
+.about-eyebrow {
+  margin: 0 0 1.5rem;
+  color: var(--wine-bright);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.about-title {
+  margin: 0;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(5rem, 13vw, 12rem);
+  font-weight: 900;
+  line-height: 0.75;
+  letter-spacing: -0.06em;
+}
+
+.about-title span {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--paper);
+}
+
+.about-red-line {
+  width: 80px;
+  height: 5px;
+  margin: 2.5rem 0;
+  background: var(--wine-bright);
+}
+
+.about-intro {
+  max-width: 570px;
+  color: rgba(244,240,235,0.65);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.about-hero-word {
+  position: absolute;
+  right: -3vw;
+  bottom: -5rem;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 25vw;
+  font-weight: 900;
+  line-height: 0.7;
+
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(244,240,235,0.06);
+}
+
+
+/* =========================================================
+   SECCIONES
+========================================================= */
+
+.about-section {
+  position: relative;
+  padding: 9rem 8vw;
+  border-bottom: 1px solid var(--line);
+}
+
+.about-section-number {
+  position: absolute;
+  top: 3rem;
+  left: 3vw;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 5rem;
+  font-weight: 900;
+  color: rgba(244,240,235,0.1);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8vw;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.about-heading {
+  margin: 0;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 900;
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+}
+
+.about-text {
+  max-width: 550px;
+  padding-top: 1rem;
+}
+
+.about-text p {
+  margin: 0 0 1.5rem;
+
+  color: rgba(244,240,235,0.65);
+  font-size: 0.95rem;
+  line-height: 1.9;
+}
+
+.about-text .about-strong {
+  color: var(--paper);
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   FILOSOFÍA
+========================================================= */
+
+.philosophy {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #080707 0%,
+      #160b0c 100%
+    );
+}
+
+.philosophy-content {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.philosophy-title {
+  margin: 0;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(4rem, 9vw, 9rem);
+  font-weight: 900;
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+}
+
+.philosophy-highlight {
+  margin: 1.5rem 0 2rem;
+
+  color: var(--wine-bright);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(3rem, 7vw, 7rem);
+  font-weight: 900;
+  line-height: 0.8;
+}
+
+.philosophy-text {
+  max-width: 600px;
+
+  color: rgba(244,240,235,0.6);
+  font-size: 0.95rem;
+  line-height: 1.9;
+}
+
+
+/* =========================================================
+   METAMORFOSIS
+========================================================= */
+
+.metamorphosis {
+  background: var(--coal);
+}
+
+
+/* =========================================================
+   SOSTENIBILIDAD
+========================================================= */
+
+.sustainability {
+  background: #0b0909;
+}
+
+.sustainability-box {
+  max-width: 850px;
+  margin: auto;
+  padding: 5rem;
+
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(164,43,49,0.16),
+      transparent 40%
+    ),
+    #141111;
+}
+
+.sustainability-box h2 {
+  margin: 0 0 2rem;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 900;
+  line-height: 0.78;
+}
+
+.sustainability-box h2 span {
+  color: var(--wine-bright);
+}
+
+.sustainability-box p:not(.about-eyebrow) {
+  max-width: 600px;
+  color: rgba(244,240,235,0.62);
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+
+/* =========================================================
+   MANIFIESTO
+========================================================= */
+
+.about-manifesto {
+  min-height: 80vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8rem 2rem;
+  text-align: center;
+
+  border-bottom: 1px solid var(--line);
+}
+
+.about-manifesto h2 {
+  margin: 0;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(5rem, 13vw, 13rem);
+  font-weight: 900;
+  line-height: 0.72;
+  letter-spacing: -0.06em;
+}
+
+.manifesto-line {
+  width: 70px;
+  height: 4px;
+  margin: 3rem 0;
+
+  background: var(--wine-bright);
+}
+
+.about-manifesto > p:last-child {
+  color: rgba(244,240,235,0.55);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+.about-final {
+  min-height: 65vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6rem 2rem;
+  text-align: center;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(118,29,34,0.22),
+      transparent 55%
+    );
+}
+
+.about-final > p {
+  margin: 0 0 1rem;
+
+  color: var(--wine-bright);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+}
+
+.about-final h2 {
+  margin: 0 0 3rem;
+
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(4rem, 9vw, 9rem);
+  font-weight: 900;
+  line-height: 0.75;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 767px) {
+
+  .about-nav {
+    min-height: 70px;
+    padding: 0 1rem;
+  }
+
+  .about-nav-links {
+    display: none;
+  }
+
+  .about-logo {
+    font-size: 1.2rem;
+  }
+
+  .about-hero {
+    min-height: 80vh;
+    padding: 6rem 1.25rem;
+  }
+
+  .about-title {
+    font-size: clamp(4.8rem, 20vw, 7rem);
+  }
+
+  .about-hero-word {
+    font-size: 35vw;
+  }
+
+  .about-section {
+    padding: 6rem 1.25rem;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .about-heading {
+    font-size: clamp(4rem, 18vw, 6rem);
+  }
+
+  .philosophy {
+    min-height: 75vh;
+  }
+
+  .philosophy-title {
+    font-size: clamp(4rem, 17vw, 6rem);
+  }
+
+  .philosophy-highlight {
+    font-size: clamp(3rem, 14vw, 5rem);
+  }
+
+  .sustainability-box {
+    padding: 2rem 1.25rem;
+  }
+
+  .sustainability-box h2 {
+    font-size: clamp(4rem, 17vw, 6rem);
+  }
+
+  .about-manifesto h2 {
+    font-size: clamp(4.5rem, 19vw, 7rem);
+  }
+
+  .about-final h2 {
+    font-size: clamp(4rem, 18vw, 6rem);
+  }
+
+}
+```
