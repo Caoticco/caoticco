@@ -615,59 +615,175 @@
 
   <script>
 
-    function togglePassword(inputId, button) {
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-      const input = document.getElementById(inputId);
+<script>
 
-      if (input.type === "password") {
+  // ==============================
+  // CONEXIÓN CON SUPABASE
+  // ==============================
 
-        input.type = "text";
+  const SUPABASE_URL =
+    "https://monucajaypygutvmjcnf.supabase.co";
 
-        button.textContent = "OCULTAR";
+  const SUPABASE_KEY =
+    "sb_publishable__yJ9MpwrQ5X26RjKWXevGw_dULsKJxM";
 
-      } else {
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
 
-        input.type = "password";
 
-        button.textContent = "VER";
+  // ==============================
+  // MOSTRAR / OCULTAR CONTRASEÑA
+  // ==============================
 
-      }
+  function togglePassword(inputId, button) {
+
+    const input =
+      document.getElementById(inputId);
+
+    if (input.type === "password") {
+
+      input.type = "text";
+      button.textContent = "OCULTAR";
+
+    } else {
+
+      input.type = "password";
+      button.textContent = "VER";
 
     }
 
-
-    document
-      .getElementById("registerForm")
-      .addEventListener("submit", function(event) {
-
-        event.preventDefault();
-
-        const password =
-          document.getElementById("registerPassword").value;
-
-        const confirmPassword =
-          document.getElementById("registerPasswordConfirm").value;
-
-        const message =
-          document.getElementById("registerMessage");
+  }
 
 
-        if (password !== confirmPassword) {
+  // ==============================
+  // REGISTRAR USUARIO
+  // ==============================
 
-          message.textContent =
-            "Las contraseñas no coinciden.";
+  document
+    .getElementById("registerForm")
+    .addEventListener("submit", async function(event) {
 
-          return;
-
-        }
+      event.preventDefault();
 
 
-        message.style.color = "#6fbf73";
+      // Obtener datos del formulario
+
+      const nombre =
+        document.getElementById("registerNombre").value.trim();
+
+      const apellido =
+        document.getElementById("registerApellido").value.trim();
+
+      const telefono =
+        document.getElementById("registerTelefono").value.trim();
+
+      const email =
+        document.getElementById("registerEmail").value.trim();
+
+      const password =
+        document.getElementById("registerPassword").value;
+
+      const confirmarPassword =
+        document.getElementById("registerPasswordConfirm").value;
+
+      const message =
+        document.getElementById("registerMessage");
+
+
+      // Limpiar mensaje
+
+      message.textContent = "";
+
+
+      // Comprobar contraseñas
+
+      if (password !== confirmarPassword) {
+
+        message.style.color = "#d65a5a";
 
         message.textContent =
-          "Formulario listo para conectar con Supabase.";
+          "Las contraseñas no coinciden.";
 
-      });
+        return;
+
+      }
+
+
+      // Mensaje de carga
+
+      message.style.color = "#f4f0eb";
+
+      message.textContent =
+        "Creando tu cuenta...";
+
+
+      // ==============================
+      // CREAR CUENTA EN SUPABASE
+      // ==============================
+
+      const { data, error } =
+        await supabaseClient.auth.signUp({
+
+          email: email,
+
+          password: password,
+
+          options: {
+
+            data: {
+
+              nombre: nombre,
+
+              apellido: apellido,
+
+              telefono: telefono
+
+            }
+
+          }
+
+        });
+
+
+      // ==============================
+      // SI HAY ERROR
+      // ==============================
+
+      if (error) {
+
+        console.error(error);
+
+        message.style.color = "#d65a5a";
+
+        message.textContent =
+          error.message;
+
+        return;
+
+      }
+
+
+      // ==============================
+      // CUENTA CREADA
+      // ==============================
+
+      message.style.color = "#6fbf73";
+
+      message.textContent =
+        "¡Cuenta creada! Revisa tu correo para confirmar tu cuenta.";
+
+      document
+        .getElementById("registerForm")
+        .reset();
+
+    });
+
+</script>
 
   </script>
 
