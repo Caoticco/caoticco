@@ -149,10 +149,31 @@ body::before{
 }
 
 .nav-links{
-
     display:flex;
-
     gap:2rem;
+}
+
+@media(max-width:1000px){
+
+    .nav-links{
+        display:flex !important;
+        position:fixed;
+        top:76px;
+        left:0;
+        right:0;
+        flex-direction:column;
+        gap:0;
+        padding:1rem;
+        background:#080707;
+        border-bottom:1px solid var(--line);
+    }
+
+    .nav-links a{
+        padding:1.2rem;
+        border-bottom:1px solid var(--line);
+    }
+
+}
 }
 
 .nav-links a{
