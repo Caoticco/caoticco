@@ -2086,6 +2086,9 @@ async function logout(){
 
 function checkout(){
 
+  ```javascript
+function checkout(){
+
     if(cart.length === 0){
 
         alert(
@@ -2095,6 +2098,49 @@ function checkout(){
         return;
 
     }
+
+    // NÚMERO DE WHATSAPP DE CAOTICCO
+    // Ejemplo: 3241394438
+    const phone = "573241304438";
+
+    // Crear lista de productos
+    let message =
+        "Hola, quiero comprar en CAOTICCO 🖤\n\n";
+
+    message += "Mi pedido:\n";
+
+    cart.forEach(item => {
+
+        const subtotal =
+            item.price * item.quantity;
+
+        message +=
+            `• ${item.name} x${item.quantity} — ${formatPrice(subtotal)}\n`;
+
+    });
+
+    // Calcular total
+    const total =
+        cart.reduce(
+            (sum, item) =>
+                sum + item.price * item.quantity,
+            0
+        );
+
+    message +=
+        `\nTOTAL: ${formatPrice(total)}`;
+
+    // Convertir mensaje para URL
+    const whatsappURL =
+        `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+    // Abrir WhatsApp
+    window.open(
+        whatsappURL,
+        "_blank"
+    );
+
+
 
 
     alert(
