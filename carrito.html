@@ -11,7 +11,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Work+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Work+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
 
 
 <style>
@@ -653,12 +656,57 @@ body::before{
     margin-top:1.3rem;
 }
 
-.price{
 
-    font-size:.9rem;
+/* =========================================
+   PRECIOS EN PRODUCTOS
+========================================= */
 
-    font-weight:700;
+.price-box{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.15rem;
 }
+
+.promo-label{
+
+    color:var(--wine-bright);
+
+    font-size:.55rem;
+
+    font-weight:800;
+
+    letter-spacing:.1em;
+
+    text-transform:uppercase;
+}
+
+.price-old{
+
+    color:rgba(244,240,235,.45);
+
+    text-decoration:line-through;
+
+    text-decoration-thickness:1px;
+
+    font-size:.7rem;
+}
+
+.price-promo{
+
+    color:white;
+
+    font-size:1rem;
+
+    font-weight:800;
+}
+
+
+/* =========================================
+   BOTÓN AÑADIR
+========================================= */
 
 .add-button{
 
@@ -883,9 +931,35 @@ body::before{
 
     margin-top:.4rem;
 
-    color:var(--muted);
+    font-size:.7rem;
+
+    display:flex;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:.2rem;
+}
+
+.cart-price-old{
+
+    color:rgba(244,240,235,.45);
+
+    text-decoration:line-through;
+
+    text-decoration-thickness:1px;
 
     font-size:.7rem;
+}
+
+.cart-price-promo{
+
+    color:white;
+
+    font-size:.85rem;
+
+    font-weight:800;
 }
 
 .quantity{
@@ -941,6 +1015,11 @@ body::before{
 
     color:var(--danger);
 }
+
+
+/* =========================================
+   TOTAL
+========================================= */
 
 .cart-footer{
 
@@ -1109,21 +1188,6 @@ footer p{
     }
 
 }
-   .cart-price-old{
-    display:inline-block;
-    color:rgba(244,240,235,.45);
-    text-decoration:line-through;
-    text-decoration-thickness:1px;
-    font-size:.7rem;
-    margin-right:.5rem;
-}
-
-.cart-price-promo{
-    display:inline-block;
-    color:white;
-    font-size:.85rem;
-    font-weight:800;
-}
 
 </style>
 
@@ -1138,7 +1202,6 @@ footer p{
 ========================================= -->
 
 <header class="navbar">
-
 
     <a href="index.html" class="logo">
         CAOTIC<span>CO</span>
@@ -1172,7 +1235,6 @@ footer p{
         <!-- USUARIO -->
 
         <div class="user-menu">
-
 
             <button
                 class="nav-button"
@@ -1234,7 +1296,6 @@ footer p{
 
         </button>
 
-
     </div>
 
 </header>
@@ -1247,7 +1308,6 @@ footer p{
 <section class="hero">
 
     <div class="hero-content">
-
 
         <p class="eyebrow">
             CAOTICCO / METAMORFOSIS
@@ -1274,7 +1334,6 @@ footer p{
 
         <div class="red-line"></div>
 
-
     </div>
 
 </section>
@@ -1289,9 +1348,7 @@ footer p{
     id="tienda"
 >
 
-
     <div class="store-header">
-
 
         <div>
 
@@ -1321,7 +1378,6 @@ footer p{
 
         </p>
 
-
     </div>
 
 
@@ -1329,7 +1385,6 @@ footer p{
         class="products"
         id="products"
     ></div>
-
 
 </section>
 
@@ -1343,7 +1398,6 @@ footer p{
     class="store"
     style="background:#0d0b0c;"
 >
-
 
     <p class="eyebrow">
         MANIFIESTO
@@ -1377,7 +1431,6 @@ footer p{
         Cada prenda es una posibilidad.
 
     </p>
-
 
 </section>
 
@@ -1413,7 +1466,6 @@ footer p{
     id="cartOverlay"
 >
 
-
     <div
         class="cart-bg"
         onclick="closeCart()"
@@ -1424,7 +1476,6 @@ footer p{
 
 
         <div class="cart-header">
-
 
             <h2 class="cart-title">
 
@@ -1441,7 +1492,6 @@ footer p{
                 ✕
             </button>
 
-
         </div>
 
 
@@ -1452,7 +1502,6 @@ footer p{
 
 
         <div class="cart-footer">
-
 
             <div class="total">
 
@@ -1475,12 +1524,9 @@ footer p{
                 CONTINUAR COMPRA
             </button>
 
-
         </div>
 
-
     </aside>
-
 
 </div>
 
@@ -1494,7 +1540,6 @@ footer p{
 
 <script>
 
-
 /* =========================================
    SUPABASE
 ========================================= */
@@ -1502,10 +1547,8 @@ footer p{
 const SUPABASE_URL =
     "https://monucajaypygutvmjcnf.supabase.co";
 
-
 const SUPABASE_KEY =
     "sb_publishable__yJ9MpwrQ5X26RjKWXevGw_dULsKJxM";
-
 
 const supabaseClient =
     window.supabase.createClient(
@@ -1515,7 +1558,7 @@ const supabaseClient =
 
 
 /* =========================================
-   PROTEGER CARRITO
+   SESIÓN
 ========================================= */
 
 async function checkSession(){
@@ -1528,11 +1571,6 @@ async function checkSession(){
             .getSession();
 
 
-    /*
-     * SI NO HAY SESIÓN,
-     * VOLVER AL LOGIN
-     */
-
     if(!session){
 
         window.location.href =
@@ -1542,10 +1580,6 @@ async function checkSession(){
 
     }
 
-
-    /*
-     * MOSTRAR CORREO
-     */
 
     const userEmail =
         document.getElementById("userEmail");
@@ -1577,28 +1611,27 @@ const products = [
         description:
             "Pants 3/1 (short,skirt) sostenible",
 
-        price:000,
+        price:0,
 
         image:"Pantalon.jpeg"
-
     },
 
 
     {
         id:2,
 
-        name:"CAPE CCC-0 ",
+        name:"CAPE CCC-0",
 
         category:"Pre-venta",
 
         description:
             "Buzo transformable (capa)",
 
-           price:200000,
-           oldPrice:240000,
-   
-          image:"CAPE_001.jpeg"
+        price:200000,
 
+        oldPrice:240000,
+
+        image:"CAPE_001.jpeg"
     },
 
 
@@ -1612,10 +1645,9 @@ const products = [
         description:
             "???",
 
-        price:000,
+        price:0,
 
         image:""
-
     },
 
 
@@ -1629,10 +1661,9 @@ const products = [
         description:
             "???",
 
-        price:000,
+        price:0,
 
         image:""
-
     }
 
 ];
@@ -1682,6 +1713,7 @@ function renderProducts(){
 
             <article class="product">
 
+
                 <div class="product-image">
 
                     ${
@@ -1706,6 +1738,7 @@ function renderProducts(){
 
                 <div class="product-info">
 
+
                     <div class="product-category">
                         ${product.category}
                     </div>
@@ -1723,9 +1756,33 @@ function renderProducts(){
 
                     <div class="product-bottom">
 
-                        <span class="price">
-                            ${formatPrice(product.price)}
-                        </span>
+
+                        <div class="price-box">
+
+
+                            ${
+                                product.oldPrice
+                                ?
+                                `
+                                    <span class="promo-label">
+                                        PROMOCIÓN
+                                    </span>
+
+                                    <span class="price-old">
+                                        ${formatPrice(product.oldPrice)}
+                                    </span>
+                                `
+                                :
+                                ""
+                            }
+
+
+                            <span class="price-promo">
+                                ${formatPrice(product.price)}
+                            </span>
+
+
+                        </div>
 
 
                         <button
@@ -1735,7 +1792,9 @@ function renderProducts(){
                             AÑADIR
                         </button>
 
+
                     </div>
+
 
                 </div>
 
@@ -1758,6 +1817,11 @@ function addToCart(id){
         );
 
 
+    if(!product){
+        return;
+    }
+
+
     const existing =
         cart.find(
             item => item.id === id
@@ -1767,6 +1831,17 @@ function addToCart(id){
     if(existing){
 
         existing.quantity++;
+
+        /*
+         * Actualizar el precio por si
+         * el producto cambió
+         */
+
+        existing.price =
+            product.price;
+
+        existing.oldPrice =
+            product.oldPrice;
 
     }else{
 
@@ -1824,9 +1899,11 @@ function renderCart(){
                     🛒
                 </div>
 
+
                 <p>
                     Tu carrito está vacío.
                 </p>
+
 
                 <button
                     class="add-button"
@@ -1857,7 +1934,7 @@ function renderCart(){
 
                             `<img
                                 src="${item.image}"
-                                alt=""
+                                alt="${item.name}"
                             >`
 
                             :
@@ -1877,29 +1954,34 @@ function renderCart(){
 
                     <div>
 
+
                         <div class="cart-item-name">
                             ${item.name}
                         </div>
 
-                        <div class="cart-item-price">
-    ${
-        item.oldPrice
-        ? `
-            <span style="
-                text-decoration:line-through;
-                opacity:.5;
-                margin-right:.5rem;
-            ">
-                ${formatPrice(item.oldPrice)}
-            </span>
-        `
-        : ""
-    }
 
-    <strong>
-        ${formatPrice(item.price)}
-    </strong>
-</div><div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">
+
+
+                            ${
+                                item.oldPrice
+                                ?
+                                `
+                                    <span class="cart-price-old">
+                                        ${formatPrice(item.oldPrice)}
+                                    </span>
+                                `
+                                :
+                                ""
+                            }
+
+
+                            <span class="cart-price-promo">
+                                ${formatPrice(item.price)}
+                            </span>
+
+
+                        </div>
 
 
                         <div class="quantity">
@@ -1926,6 +2008,7 @@ function renderCart(){
 
                         </div>
 
+
                     </div>
 
 
@@ -1944,6 +2027,10 @@ function renderCart(){
     }
 
 
+    /* =====================================
+       TOTAL
+    ===================================== */
+
     const total =
         cart.reduce(
             (sum,item) =>
@@ -1958,6 +2045,10 @@ function renderCart(){
         .textContent =
             formatPrice(total);
 
+
+    /* =====================================
+       CONTADOR
+    ===================================== */
 
     const count =
         cart.reduce(
@@ -1997,7 +2088,9 @@ function changeQuantity(id,change){
         );
 
 
-    if(!item) return;
+    if(!item){
+        return;
+    }
 
 
     item.quantity += change;
@@ -2112,10 +2205,11 @@ async function logout(){
 
 
 /* =========================================
-   CHECKOUT
+   CHECKOUT / WHATSAPP
 ========================================= */
 
 function checkout(){
+
     if(cart.length === 0){
 
         alert(
@@ -2126,54 +2220,53 @@ function checkout(){
 
     }
 
-    // NÚMERO DE WHATSAPP DE CAOTICCO
-    // Ejemplo: 3241394438
-    const phone = "573241304438";
 
-    // Crear lista de productos
+    const phone =
+        "573241304438";
+
+
     let message =
         "Hola, quiero comprar en CAOTICCO 🖤\n\n";
 
-    message += "Mi pedido:\n";
+
+    message +=
+        "Mi pedido:\n";
+
 
     cart.forEach(item => {
 
         const subtotal =
-            item.price * item.quantity;
+            item.price *
+            item.quantity;
+
 
         message +=
             `• ${item.name} x${item.quantity} — ${formatPrice(subtotal)}\n`;
 
     });
 
-    // Calcular total
+
     const total =
         cart.reduce(
-            (sum, item) =>
-                sum + item.price * item.quantity,
+            (sum,item) =>
+                sum +
+                item.price *
+                item.quantity,
             0
         );
+
 
     message +=
         `\nTOTAL: ${formatPrice(total)}`;
 
-    // Convertir mensaje para URL
+
     const whatsappURL =
         `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
-    // Abrir WhatsApp
+
     window.open(
         whatsappURL,
         "_blank"
-    );
-
-
-
-
-    alert(
-        "Tu carrito está listo para comprar.\n\n" +
-        "El siguiente paso será conectar " +
-        "el sistema de pagos."
     );
 
 }
@@ -2226,7 +2319,7 @@ checkSession();
 supabaseClient
     .auth
     .onAuthStateChange(
-        function(event, session){
+        function(event,session){
 
             if(!session){
 
