@@ -327,7 +327,7 @@ body::before{
 
 
 /* =========================================
-   CONTADOR
+   CONTADOR CARRITO
 ========================================= */
 
 .cart-count{
@@ -643,6 +643,66 @@ body::before{
     line-height:1.6;
 }
 
+
+/* =========================================
+   CUENTA REGRESIVA
+========================================= */
+
+.countdown-box{
+
+    margin-top:1.2rem;
+
+    padding:.8rem;
+
+    border:1px solid rgba(164,43,49,.45);
+
+    background:rgba(118,29,34,.08);
+}
+
+.countdown-label{
+
+    color:var(--wine-bright);
+
+    font-size:.55rem;
+
+    font-weight:800;
+
+    letter-spacing:.12em;
+
+    text-transform:uppercase;
+
+    margin-bottom:.35rem;
+}
+
+.countdown{
+
+    font-family:"Barlow Condensed",sans-serif;
+
+    font-size:1.5rem;
+
+    font-weight:800;
+
+    letter-spacing:.05em;
+}
+
+.countdown-finished{
+
+    color:var(--wine-bright);
+
+    font-size:.7rem;
+
+    font-weight:800;
+
+    letter-spacing:.1em;
+
+    text-transform:uppercase;
+}
+
+
+/* =========================================
+   PARTE INFERIOR PRODUCTO
+========================================= */
+
 .product-bottom{
 
     display:flex;
@@ -658,7 +718,7 @@ body::before{
 
 
 /* =========================================
-   PRECIOS EN PRODUCTOS
+   PRECIOS
 ========================================= */
 
 .price-box{
@@ -734,6 +794,28 @@ body::before{
     background:var(--wine-bright);
 
     border-color:var(--wine-bright);
+}
+
+
+/* BOTÓN DESACTIVADO */
+
+.add-button.disabled{
+
+    background:#292324;
+
+    border-color:#292324;
+
+    color:rgba(244,240,235,.35);
+
+    cursor:not-allowed;
+
+}
+
+.add-button.disabled:hover{
+
+    background:#292324;
+
+    border-color:#292324;
 }
 
 
@@ -1622,7 +1704,7 @@ const products = [
 
         name:"CAPE CCC-0",
 
-        category:"Exclusivo",
+        category:"Pre-venta",
 
         description:
             "Buzo transformable (capa)",
@@ -1631,7 +1713,9 @@ const products = [
 
         oldPrice:240000,
 
-        image:"CAPE_001.jpeg"
+        image:"CAPE_001.jpeg",
+
+        hasCountdown:true
     },
 
 
@@ -1667,6 +1751,18 @@ const products = [
     }
 
 ];
+
+
+/* =========================================
+   FECHA DE FINALIZACIÓN
+   LUNES 28 DE SEPTIEMBRE 2026
+   11:59 PM HORA COLOMBIA
+========================================= */
+
+const countdownEnd =
+    new Date(
+        "2026-09-28T23:59:59-05:00"
+    ).getTime();
 
 
 /* =========================================
@@ -1754,6 +1850,30 @@ function renderProducts(){
                     </p>
 
 
+                    ${
+                        product.hasCountdown
+                        ?
+                        `
+                        <div class="countdown-box">
+
+                            <div class="countdown-label">
+                                LA PRE-VENTA TERMINA EN
+                            </div>
+
+                            <div
+                                class="countdown"
+                                id="countdown-${product.id}"
+                            >
+                                CARGANDO...
+                            </div>
+
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+
                     <div class="product-bottom">
 
 
@@ -1765,7 +1885,7 @@ function renderProducts(){
                                 ?
                                 `
                                     <span class="promo-label">
-                                        PRE-VENTA
+                                        PROMOCIÓN
                                     </span>
 
                                     <span class="price-old">
@@ -1787,6 +1907,7 @@ function renderProducts(){
 
                         <button
                             class="add-button"
+                            id="add-button-${product.id}"
                             onclick="addToCart(${product.id})"
                         >
                             AÑADIR
@@ -1806,6 +1927,148 @@ function renderProducts(){
 
 
 /* =========================================
+   ACTUALIZAR CUENTA REGRESIVA
+========================================= */
+
+function updateCountdown(){
+
+    const product =
+        products.find(
+            p => p.hasCountdown
+        );
+
+
+    if(!product){
+        return;
+    }
+
+
+    const countdown =
+        document.getElementById(
+            `countdown-${product.id}`
+        );
+
+
+    const button =
+        document.getElementById(
+            `add-button-${product.id}`
+        );
+
+
+    if(!countdown){
+        return;
+    }
+
+
+    const now =
+        new Date().getTime();
+
+
+    const distance =
+        countdownEnd - now;
+
+
+    /* =====================================
+       CUENTA TERMINADA
+    ===================================== */
+
+    if(distance <= 0){
+
+        countdown.innerHTML =
+
+            `<span class="countdown-finished">
+                PRE-VENTA FINALIZADA
+            </span>`;
+
+
+        if(button){
+
+            button.disabled = true;
+
+            button.classList.add("disabled");
+
+            button.textContent =
+                "FINALIZADA";
+
+        }
+
+
+        return;
+
+    }
+
+
+    /* =====================================
+       DÍAS
+    ===================================== */
+
+    const days =
+        Math.floor(
+            distance /
+            (1000 * 60 * 60 * 24)
+        );
+
+
+    /* =====================================
+       HORAS
+    ===================================== */
+
+    const hours =
+        Math.floor(
+            (distance %
+            (1000 * 60 * 60 * 24)) /
+            (1000 * 60 * 60)
+        );
+
+
+    /* =====================================
+       MINUTOS
+    ===================================== */
+
+    const minutes =
+        Math.floor(
+            (distance %
+            (1000 * 60 * 60)) /
+            (1000 * 60)
+        );
+
+
+    /* =====================================
+       SEGUNDOS
+    ===================================== */
+
+    const seconds =
+        Math.floor(
+            (distance %
+            (1000 * 60)) /
+            1000
+        );
+
+
+    countdown.textContent =
+
+        `${String(days).padStart(2,"0")} D  ` +
+
+        `${String(hours).padStart(2,"0")} : ` +
+
+        `${String(minutes).padStart(2,"0")} : ` +
+
+        `${String(seconds).padStart(2,"0")}`;
+
+}
+
+
+/* =========================================
+   INICIAR CUENTA REGRESIVA
+========================================= */
+
+setInterval(
+    updateCountdown,
+    1000
+);
+
+
+/* =========================================
    AGREGAR AL CARRITO
 ========================================= */
 
@@ -1822,6 +2085,30 @@ function addToCart(id){
     }
 
 
+    /* No permitir agregar después
+       de terminar la preventa */
+
+    if(product.hasCountdown){
+
+        const now =
+            new Date().getTime();
+
+
+        if(now >= countdownEnd){
+
+            alert(
+                "La preventa de este producto ha finalizado."
+            );
+
+            updateCountdown();
+
+            return;
+
+        }
+
+    }
+
+
     const existing =
         cart.find(
             item => item.id === id
@@ -1831,11 +2118,6 @@ function addToCart(id){
     if(existing){
 
         existing.quantity++;
-
-        /*
-         * Actualizar el precio por si
-         * el producto cambió
-         */
 
         existing.price =
             product.price;
@@ -2310,6 +2592,8 @@ renderProducts();
 renderCart();
 
 checkSession();
+
+updateCountdown();
 
 
 /* =========================================
