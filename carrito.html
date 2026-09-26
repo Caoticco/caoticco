@@ -1786,8 +1786,13 @@ function renderProducts(){
 
 
                         <button
-                            class="add-button"
-                            onclick="addToCart(${product.id})"
+                             onclick="addToCart(${product.id})"
+    ${product.hasCountdown ? 'style="display:none;
+    onclick="addToCart(${product.id})"
+    ${pro
+    onclick="addid="add-button-${product.id}"
+    onclick="addToCart(${product.id})"
+    ${product.hasCountdown ? 'style="display:none;"' : ''}
                         >
                             AÑADIR
                         </button>
@@ -1855,7 +1860,10 @@ function addToCart(id){
 
     }
 
-
+   const countdownStart =
+    new Date(
+        "2026-09-28T00:00:00-05:00"
+    ).getTime();
     saveCart();
 
     renderCart();
