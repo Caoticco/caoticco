@@ -1555,16 +1555,16 @@ const products = [
     {
         id:1,
 
-        name:"CAOTICCO BLACK",
+        name:"CCC 01",
 
         category:"Essential",
 
         description:
-            "Prenda urbana de edición limitada.",
+            "Pants 3/1 (short,skirt) sostenible",
 
-        price:89900,
+        price:000,
 
-        image:""
+        image:"Pantalon.jpeg"
 
     },
 
@@ -1572,16 +1572,17 @@ const products = [
     {
         id:2,
 
-        name:"METAMORFOSIS",
+        name:"CAPE CCC-0 ",
 
         category:"Collection",
 
         description:
-            "Diseño transformable inspirado en el caos.",
+            "Buso transformable (capa)",
 
-        price:129900,
-
-        image:""
+           price:200000,
+           oldPrice:240000,
+   
+          image:"CAPE_001.jpeg"
 
     },
 
@@ -1589,14 +1590,14 @@ const products = [
     {
         id:3,
 
-        name:"PANTALÓN 3 EN 1",
+        name:"CCC 03",
 
         category:"Transformable",
 
         description:
-            "Una prenda. Tres posibilidades.",
+            "???",
 
-        price:159900,
+        price:000,
 
         image:""
 
@@ -1606,14 +1607,14 @@ const products = [
     {
         id:4,
 
-        name:"CHALECO CAÓTICO",
+        name:"CCC 04",
 
         category:"Limited",
 
         description:
-            "Lona impermeable y construcción urbana.",
+            "???",
 
-        price:139900,
+        price:000,
 
         image:""
 
@@ -1865,10 +1866,25 @@ function renderCart(){
                             ${item.name}
                         </div>
 
-
                         <div class="cart-item-price">
-                            ${formatPrice(item.price)}
-                        </div>
+    ${
+        item.oldPrice
+        ? `
+            <span style="
+                text-decoration:line-through;
+                opacity:.5;
+                margin-right:.5rem;
+            ">
+                ${formatPrice(item.oldPrice)}
+            </span>
+        `
+        : ""
+    }
+
+    <strong>
+        ${formatPrice(item.price)}
+    </strong>
+</div><div class="cart-item-name">${item.name}</div>
 
 
                         <div class="quantity">
