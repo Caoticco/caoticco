@@ -148,32 +148,11 @@ body::before{
     color:var(--wine-bright);
 }
 
+
+
 .nav-links{
     display:flex;
     gap:2rem;
-}
-
-@media(max-width:1000px){
-
-    .nav-links{
-        display:flex !important;
-        position:fixed;
-        top:76px;
-        left:0;
-        right:0;
-        flex-direction:column;
-        gap:0;
-        padding:1rem;
-        background:#080707;
-        border-bottom:1px solid var(--line);
-    }
-
-    .nav-links a{
-        padding:1.2rem;
-        border-bottom:1px solid var(--line);
-    }
-
-}
 }
 
 .nav-links a{
@@ -203,6 +182,75 @@ body::before{
     gap:.6rem;
 }
 
+/* MENÚ MÓVIL */
+
+.mobile-menu-button{
+    display:none;
+}
+
+@media(max-width:1000px){
+
+    .nav-links{
+        display:none !important;
+    }
+
+    .mobile-menu-button{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        width:45px;
+        height:45px;
+        border:1px solid var(--line);
+        background:#501419;
+        color:var(--paper);
+        font-size:1.3rem;
+        cursor:pointer;
+    }
+
+    .mobile-menu{
+        display:none !important;
+    }
+
+    .mobile-menu.open{
+        display:flex !important;
+        position:fixed;
+        top:76px;
+        left:0;
+        right:0;
+        z-index:99;
+        flex-direction:column;
+        padding:1rem;
+        background:#080707;
+        border-bottom:1px solid var(--line);
+    }
+
+    .mobile-menu a{
+        padding:1.2rem;
+        border-bottom:1px solid var(--line);
+        color:var(--paper);
+        font-size:.7rem;
+        font-weight:700;
+        letter-spacing:.13em;
+        text-transform:uppercase;
+    }
+
+    .mobile-menu a:hover{
+        color:var(--wine-bright);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .navbar{
+        padding:0 1rem;
+    }
+
+    .logo{
+        font-size:1.6rem;
+    }
+
+}
 
 /* =========================================
    BOTÓN MENÚ MÓVIL
