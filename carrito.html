@@ -16,7 +16,6 @@
     rel="stylesheet"
 >
 
-
 <style>
 
 /* =========================================
@@ -1558,6 +1557,17 @@ const supabaseClient =
 
 
 /* =========================================
+   FECHA DE APERTURA DE PREVENTA
+   28 SEPTIEMBRE 2026 - 00:00 COLOMBIA
+========================================= */
+
+const countdownStart =
+    new Date(
+        "2026-09-28T00:00:00-05:00"
+    ).getTime();
+
+
+/* =========================================
    SESIÓN
 ========================================= */
 
@@ -1631,7 +1641,9 @@ const products = [
 
         oldPrice:240000,
 
-        image:"CAPE_001.jpeg"
+        image:"CAPE_001.jpeg",
+
+        hasCountdown:true
     },
 
 
@@ -1754,6 +1766,54 @@ function renderProducts(){
                     </p>
 
 
+                    ${
+                        product.hasCountdown
+                        ?
+                        `
+
+                            <div
+                                style="
+                                    margin-top:1rem;
+                                    padding:.8rem 0;
+                                    border-top:1px solid var(--line);
+                                    border-bottom:1px solid var(--line);
+                                "
+                            >
+
+                                <div
+                                    style="
+                                        color:var(--wine-bright);
+                                        font-size:.55rem;
+                                        font-weight:800;
+                                        letter-spacing:.12em;
+                                        text-transform:uppercase;
+                                        margin-bottom:.35rem;
+                                    "
+                                >
+                                    LA PREVENTA COMIENZA EN
+                                </div>
+
+
+                                <div
+                                    id="countdown-${product.id}"
+                                    style="
+                                        font-family:'Barlow Condensed',sans-serif;
+                                        font-size:1.4rem;
+                                        font-weight:800;
+                                        letter-spacing:.08em;
+                                    "
+                                >
+                                    CARGANDO...
+                                </div>
+
+                            </div>
+
+                        `
+                        :
+                        ""
+                    }
+
+
                     <div class="product-bottom">
 
 
@@ -1786,13 +1846,16 @@ function renderProducts(){
 
 
                         <button
-                             onclick="addToCart(${product.id})"
-    ${product.hasCountdown ? 'style="display:none;
-    onclick="addToCart(${product.id})"
-    ${pro
-    onclick="addid="add-button-${product.id}"
-    onclick="addToCart(${product.id})"
-    ${product.hasCountdown ? 'style="display:none;"' : ''}
+                            class="add-button"
+                            id="add-button-${product.id}"
+                            onclick="addToCart(${product.id})"
+                            ${
+                                product.hasCountdown
+                                ?
+                                'style="display:none;"'
+                                :
+                                ""
+                            }
                         >
                             AÑADIR
                         </button>
@@ -1806,6 +1869,150 @@ function renderProducts(){
             </article>
 
         `).join("");
+
+}
+
+
+/* =========================================
+   CUENTA REGRESIVA
+========================================= */
+
+function updateCountdown(){
+
+    const product =
+        products.find(
+            p => p.hasCountdown
+        );
+
+
+    if(!product){
+        return;
+    }
+
+
+    const countdown =
+        document.getElementById(
+            `countdown-${product.id}`
+        );
+
+
+    const button =
+        document.getElementById(
+            `add-button-${product.id}`
+        );
+
+
+    if(!countdown){
+        return;
+    }
+
+
+    const now =
+        new Date().getTime();
+
+
+    const distance =
+        countdownStart - now;
+
+
+    /* =====================================
+       ANTES DEL LANZAMIENTO
+    ===================================== */
+
+    if(distance > 0){
+
+        const days =
+            Math.floor(
+                distance /
+                (1000 * 60 * 60 * 24)
+            );
+
+
+        const hours =
+            Math.floor(
+                (
+                    distance %
+                    (1000 * 60 * 60 * 24)
+                ) /
+                (1000 * 60 * 60)
+            );
+
+
+        const minutes =
+            Math.floor(
+                (
+                    distance %
+                    (1000 * 60 * 60)
+                ) /
+                (1000 * 60)
+            );
+
+
+        const seconds =
+            Math.floor(
+                (
+                    distance %
+                    (1000 * 60)
+                ) /
+                1000
+            );
+
+
+        countdown.textContent =
+
+            `${String(days).padStart(2,"0")} D  ` +
+
+            `${String(hours).padStart(2,"0")} : ` +
+
+            `${String(minutes).padStart(2,"0")} : ` +
+
+            `${String(seconds).padStart(2,"0")}`;
+
+
+        if(button){
+
+            button.style.display =
+                "none";
+
+        }
+
+
+        return;
+
+    }
+
+
+    /* =====================================
+       PREVENTA ABIERTA
+    ===================================== */
+
+    countdown.innerHTML =
+
+        `<span
+            style="
+                color:var(--wine-bright);
+                font-family:'Barlow Condensed',sans-serif;
+                font-size:1.2rem;
+                font-weight:800;
+                letter-spacing:.08em;
+            "
+        >
+            PRE-VENTA ABIERTA
+        </span>`;
+
+
+    if(button){
+
+        button.style.display =
+            "block";
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "AÑADIR";
+
+    }
 
 }
 
@@ -1827,6 +2034,29 @@ function addToCart(id){
     }
 
 
+    /* =====================================
+       SEGURIDAD DE PREVENTA
+    ===================================== */
+
+    if(product.hasCountdown){
+
+        const now =
+            new Date().getTime();
+
+
+        if(now < countdownStart){
+
+            alert(
+                "La preventa estará disponible el lunes 28 de septiembre a las 00:00."
+            );
+
+            return;
+
+        }
+
+    }
+
+
     const existing =
         cart.find(
             item => item.id === id
@@ -1836,11 +2066,6 @@ function addToCart(id){
     if(existing){
 
         existing.quantity++;
-
-        /*
-         * Actualizar el precio por si
-         * el producto cambió
-         */
 
         existing.price =
             product.price;
@@ -1860,10 +2085,7 @@ function addToCart(id){
 
     }
 
-   const countdownStart =
-    new Date(
-        "2026-09-28T00:00:00-05:00"
-    ).getTime();
+
     saveCart();
 
     renderCart();
@@ -2317,7 +2539,19 @@ renderProducts();
 
 renderCart();
 
+updateCountdown();
+
 checkSession();
+
+
+/* =========================================
+   ACTUALIZAR CUENTA REGRESIVA
+========================================= */
+
+setInterval(
+    updateCountdown,
+    1000
+);
 
 
 /* =========================================
