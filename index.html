@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="es">
 
@@ -15,49 +16,82 @@
   >
 
   <title>CAOTICCO — Cultura en movimiento</title>
+
   <link rel="icon" type="image/jpeg" href="logo.jpeg">
+
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
 
   <!-- Lucide -->
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.577.0/dist/umd/lucide.min.js"></script>
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const revealEls = document.querySelectorAll('.reveal');
-
-    if (!('IntersectionObserver' in window)) {
-      // Fallback: si el navegador no soporta observer, mostrar todo directo
-      revealEls.forEach(el => el.classList.add('in-view'));
-      return;
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    });
-
-    revealEls.forEach(el => observer.observe(el));
-  });
-</script>
 
   <!-- Fuentes -->
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Work+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   >
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
   <!-- CSS -->
   <link rel="stylesheet" href="estilo.css">
+
+  <!-- Reveal -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      const revealEls = document.querySelectorAll(".reveal");
+
+      if (!("IntersectionObserver" in window)) {
+
+        revealEls.forEach(el => {
+          el.classList.add("in-view");
+        });
+
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+
+          entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+              entry.target.classList.add("in-view");
+
+              observer.unobserve(entry.target);
+
+            }
+
+          });
+
+        },
+        {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px"
+        }
+      );
+
+      revealEls.forEach(el => {
+        observer.observe(el);
+      });
+
+    });
+  </script>
+
 </head>
 
-<body data-template-id="__page-root" class="w-full">
+
+<body
+  data-template-id="__page-root"
+  class="w-full"
+>
+
 
   <!-- =====================================================
        NAVBAR
@@ -71,6 +105,7 @@
     >
 
       <!-- LOGO / MARCA -->
+
       <a
         href="#inicio"
         class="canva-link display focus-ring text-3xl font-black leading-none"
@@ -80,25 +115,41 @@
 
 
       <!-- NAV DESKTOP -->
+
       <div class="hidden items-center gap-7 lg:flex">
 
-        <a href="#inicio" class="canva-link nav-link focus-ring">
+        <a
+          href="#inicio"
+          class="canva-link nav-link focus-ring"
+        >
           Inicio
         </a>
 
-        <a href="#identidad" class="canva-link nav-link focus-ring">
+        <a
+          href="#identidad"
+          class="canva-link nav-link focus-ring"
+        >
           Identidad
         </a>
 
-        <a href="#territorios" class="canva-link nav-link focus-ring">
+        <a
+          href="#territorios"
+          class="canva-link nav-link focus-ring"
+        >
           Territorios
         </a>
 
-        <a href="#tienda" class="canva-link nav-link focus-ring">
+        <a
+          href="#tienda"
+          class="canva-link nav-link focus-ring"
+        >
           Tienda
         </a>
 
-        <a href="#contacto" class="canva-link nav-link focus-ring">
+        <a
+          href="#contacto"
+          class="canva-link nav-link focus-ring"
+        >
           Contacto
         </a>
 
@@ -106,9 +157,11 @@
 
 
       <!-- ACCIONES -->
+
       <div class="flex items-center gap-1">
 
-        <!-- INICIAR SESIÓN -->
+        <!-- LOGIN -->
+
         <a
           href="index2.html"
           class="login-button focus-ring hidden sm:inline-flex"
@@ -129,6 +182,7 @@
 
 
         <!-- CARRITO -->
+
         <button
           id="cart-button"
           type="button"
@@ -153,6 +207,7 @@
 
 
         <!-- LOGO -->
+
         <div class="logo-frame">
 
           <img
@@ -166,6 +221,7 @@
 
 
         <!-- MENÚ MOBILE -->
+
         <button
           id="menu-toggle"
           type="button"
@@ -189,6 +245,7 @@
 
 
     <!-- MENÚ MOBILE -->
+
     <div
       id="mobile-menu"
       class="mobile-panel border-t border-white/10 lg:hidden"
@@ -224,9 +281,8 @@
           Tienda
         </a>
 
-        <!-- LOGIN MOBILE -->
         <a
-          href="inicio.html"
+          href="index2.html"
           class="mobile-auth-button"
         >
           Iniciar sesión
@@ -246,13 +302,18 @@
   </header>
 
 
+
   <!-- =====================================================
        CONTENIDO
   ====================================================== -->
 
   <main>
 
-    <!-- HERO -->
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
     <section
       id="inicio"
       class="hero hero-height relative flex items-end overflow-hidden"
@@ -266,6 +327,7 @@
       >
 
       <div class="hero-shade absolute inset-0"></div>
+
 
       <div
         class="relative z-10 mx-auto w-full max-w-[1500px] px-5 pb-16 pt-32 md:px-8 md:pb-20"
@@ -284,7 +346,7 @@
           </h1>
 
           <p class="mt-7 max-w-lg text-sm leading-7 text-white/80 md:text-base">
-           "EL CAOS NO TE FRENA TE TRANSFORMA"
+            "EL CAOS NO TE FRENA TE TRANSFORMA"
           </p>
 
           <a
@@ -298,6 +360,7 @@
 
       </div>
 
+
       <div class="absolute bottom-7 right-6 z-10 hidden text-right md:block">
 
         <p class="display text-sm font-bold tracking-[.16em] text-white/60">
@@ -309,20 +372,26 @@
     </section>
 
 
-    <!-- IDENTIDAD -->
+
+    <!-- =====================================================
+         IDENTIDAD
+    ====================================================== -->
+
     <section
       id="identidad"
-      class="section-pad bg-[#00000]"
-      class="absolute inset-0 w-full h-full object-contain"
-      style=" background-image: url('nosotros.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; " 
+      class="section-pad"
+      style="
+        background-image: url('nosotros.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      "
     >
-    
 
       <div
         class="mx-auto grid max-w-[1500px] gap-10 lg:grid-cols-[.82fr_1.5fr] lg:gap-20"
-        
       >
-        
+
         <div class="reveal">
 
           <p class="text-xs font-bold uppercase tracking-[.23em] text-[#a42b31]">
@@ -332,6 +401,7 @@
           <div class="red-rule mt-5"></div>
 
         </div>
+
 
         <div class="reveal">
 
@@ -358,7 +428,11 @@
     </section>
 
 
-    <!-- TERRITORIOS -->
+
+    <!-- =====================================================
+         TERRITORIOS
+    ====================================================== -->
+
     <section
       id="territorios"
       class="section-pad bg-[#080707]"
@@ -377,7 +451,7 @@
             </p>
 
             <h2 class="display section-title">
-            CCC
+              CCC
             </h2>
 
           </div>
@@ -392,50 +466,68 @@
 
         <div class="grid gap-3 md:grid-cols-3">
 
-       <article class="canva-card territory reveal relative overflow-hidden">
 
-  <!-- Imagen de fondo -->
-  <img 
-    src="origen.jpeg" 
-    alt="Ruido" 
-    class="absolute inset-0 h-full w-full object-cover -z-10"
-  />
+          <!-- ORIGEN -->
 
-  <!-- Capa oscura opcional para asegurar legibilidad del texto -->
-  <div class="absolute inset-0 bg-black/40 -z-10"></div>
+          <article
+            class="canva-card territory reveal relative overflow-hidden"
+          >
 
-  <p class="territory-number" aria-hidden="true">
-    01
-        </p>
+            <img
+              src="origen.jpeg"
+              alt="Origen"
+              class="absolute inset-0 h-full w-full object-cover -z-10"
+            >
 
-          <div class="absolute bottom-7 left-7 right-7">
+            <div class="absolute inset-0 bg-black/40 -z-10"></div>
 
-        <h3 class="display text-5xl font-black leading-none text-white">
-        ORIGEN
-          </h3>
+            <p
+              class="territory-number"
+              aria-hidden="true"
+            >
+              01
+            </p>
 
-          <p class="mt-4 max-w-xs text-sm leading-6 text-white/65">
-            No hay una sola forma de habitar el mundo.
-             </p>
+            <div class="absolute bottom-7 left-7 right-7">
 
-          </div>
+              <h3 class="display text-5xl font-black leading-none text-white">
+                ORIGEN
+              </h3>
+
+              <p class="mt-4 max-w-xs text-sm leading-6 text-white/65">
+                No hay una sola forma de habitar el mundo.
+              </p>
+
+            </div>
 
           </article>
 
-          <article class="canva-card territory reveal">
-           <img 
-    src="memoria.jpeg" 
-    alt="Ruido" 
-    class="absolute inset-0 h-full w-full object-cover -z-10"
-  />
-            <p class="territory-number" aria-hidden="true">
+
+          <!-- MEMORIA -->
+
+          <article
+            class="canva-card territory reveal relative overflow-hidden"
+          >
+
+            <img
+              src="memoria.jpeg"
+              alt="Memoria"
+              class="absolute inset-0 h-full w-full object-cover -z-10"
+            >
+
+            <div class="absolute inset-0 bg-black/40 -z-10"></div>
+
+            <p
+              class="territory-number"
+              aria-hidden="true"
+            >
               02
             </p>
 
             <div class="absolute bottom-7 left-7 right-7">
 
               <h3 class="display text-5xl font-black leading-none">
-                MEMORIA 
+                MEMORIA
               </h3>
 
               <p class="mt-4 max-w-xs text-sm leading-6 text-white/65">
@@ -447,13 +539,24 @@
           </article>
 
 
-          <article class="canva-card territory reveal">
-  <img 
-    src="rebeldia.jpeg" 
-    alt="Ruido" 
-    class="absolute inset-0 h-full w-full object-cover -z-10"
-  />
-            <p class="territory-number" aria-hidden="true">
+          <!-- REBELDÍA -->
+
+          <article
+            class="canva-card territory reveal relative overflow-hidden"
+          >
+
+            <img
+              src="rebeldia.jpeg"
+              alt="Rebeldía"
+              class="absolute inset-0 h-full w-full object-cover -z-10"
+            >
+
+            <div class="absolute inset-0 bg-black/40 -z-10"></div>
+
+            <p
+              class="territory-number"
+              aria-hidden="true"
+            >
               03
             </p>
 
@@ -471,6 +574,7 @@
 
           </article>
 
+
         </div>
 
       </div>
@@ -478,7 +582,11 @@
     </section>
 
 
-    <!-- TIENDA -->
+
+    <!-- =====================================================
+         TIENDA
+    ====================================================== -->
+
     <section
       id="tienda"
       class="section-pad bg-[#111010]"
@@ -509,10 +617,13 @@
           class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
         >
 
-          <!-- PRODUCTO 1 -->
+
+          <!-- =================================================
+               PRODUCTO 1
+          ================================================== -->
+
           <article
             class="product-card reveal"
-            
             data-product-id="1"
             data-product-name="CAOTICCO BLACK"
             data-product-price="89900"
@@ -524,9 +635,14 @@
                 01
               </span>
 
-              <img src="Pantalon.jpeg" alt="CAOTICCO BLACK" class="product-img">
+              <img
+                src="Pantalon.jpeg"
+                alt="CAOTICCO BLACK"
+                class="product-img"
+              >
 
             </div>
+
 
             <div class="product-info">
 
@@ -535,7 +651,7 @@
               </h3>
 
               <p class="product-description">
-                Pants 3/1 (short,skirt) sostenible
+                Pants 3/1 (short, skirt) sostenible
               </p>
 
               <div class="product-bottom">
@@ -551,7 +667,10 @@
                   onclick="window.location.href='index2.html'"
                 >
 
-                  <i data-lucide="plus" width="17"></i>
+                  <i
+                    data-lucide="plus"
+                    width="17"
+                  ></i>
 
                   Añadir
 
@@ -564,7 +683,11 @@
           </article>
 
 
-          <!-- PRODUCTO 2 -->
+
+          <!-- =================================================
+               PRODUCTO 2
+          ================================================== -->
+
           <article
             class="product-card reveal"
             data-product-id="2"
@@ -577,10 +700,15 @@
               <span class="product-number">
                 02
               </span>
-             <img src="CAPE_001.jpeg" alt="CAPE CCC-0" class="product-img">
-              <i data-lucide="shirt" width="55" height="55"></i>
+
+              <img
+                src="CAPE_001.jpeg"
+                alt="CAPE CCC-0"
+                class="product-img"
+              >
 
             </div>
+
 
             <div class="product-info">
 
@@ -589,7 +717,7 @@
               </h3>
 
               <p class="product-description">
-               Buzo transformable(capa)
+                Buzo transformable (capa)
               </p>
 
               <div class="product-bottom">
@@ -602,11 +730,13 @@
                   type="button"
                   class="product-add"
                   data-add-cart="2"
-                  src="incio.html"
                   onclick="window.location.href='index2.html'"
                 >
 
-                  <i data-lucide="plus" width="17"></i>
+                  <i
+                    data-lucide="plus"
+                    width="17"
+                  ></i>
 
                   Añadir
 
@@ -619,12 +749,16 @@
           </article>
 
 
-          <!-- PRODUCTO 3 -->
+
+          <!-- =================================================
+               PRODUCTO 3
+          ================================================== -->
+
           <article
             class="product-card reveal"
             data-product-id="3"
-            data-product-name="CAOTICCO CAP"
-            data-product-price="69900"
+            data-product-name="TOTE BAG BASIC"
+            data-product-price="50000"
           >
 
             <div class="product-image">
@@ -634,22 +768,25 @@
               </span>
 
 
-     <img
-  id="product-image-3"
-  src="logo.jpeg"
-  alt="Tote Bag Basic"
-  class="clickable-product-image"
->
+              <!--
+                ESTA ES LA IMAGEN QUE CAMBIA
+                AL HACER CLICK
+              -->
 
+              <img
+                id="product-image-3"
+                src="logo.jpeg"
+                alt="Tote Bag Basic"
+                class="product-img clickable-product-image"
+              >
 
-</div>
+            </div>
 
-            
 
             <div class="product-info">
 
               <h3 class="display product-name">
-                TOTE BAG   BASIC
+                TOTE BAG BASIC
               </h3>
 
               <p class="product-description">
@@ -659,18 +796,20 @@
               <div class="product-bottom">
 
                 <strong class="product-price">
-                  $50000
+                  $50.000
                 </strong>
 
                 <button
                   type="button"
                   class="product-add"
                   data-add-cart="3"
-                  src="incio.html"
                   onclick="window.location.href='index2.html'"
                 >
 
-                  <i data-lucide="plus" width="17"></i>
+                  <i
+                    data-lucide="plus"
+                    width="17"
+                  ></i>
 
                   Añadir
 
@@ -683,7 +822,11 @@
           </article>
 
 
-          <!-- PRODUCTO 4 -->
+
+          <!-- =================================================
+               PRODUCTO 4
+          ================================================== -->
+
           <article
             class="product-card reveal"
             data-product-id="4"
@@ -697,9 +840,14 @@
                 04
               </span>
 
-              <i data-lucide="shirt" width="55" height="55"></i>
+              <i
+                data-lucide="shirt"
+                width="55"
+                height="55"
+              ></i>
 
             </div>
+
 
             <div class="product-info">
 
@@ -708,7 +856,7 @@
               </h3>
 
               <p class="product-description">
-               ???
+                Próximamente
               </p>
 
               <div class="product-bottom">
@@ -721,11 +869,13 @@
                   type="button"
                   class="product-add"
                   data-add-cart="4"
-                  src="incio.html"
                   onclick="window.location.href='index2.html'"
                 >
 
-                  <i data-lucide="plus" width="17"></i>
+                  <i
+                    data-lucide="plus"
+                    width="17"
+                  ></i>
 
                   Añadir
 
@@ -737,6 +887,7 @@
 
           </article>
 
+
         </div>
 
       </div>
@@ -744,6 +895,7 @@
     </section>
 
   </main>
+
 
 
   <!-- =====================================================
@@ -759,6 +911,9 @@
       class="mx-auto grid max-w-[1500px] gap-10 md:grid-cols-[1.4fr_1fr_1fr]"
     >
 
+
+      <!-- MARCA -->
+
       <div>
 
         <h2 class="display text-5xl font-black leading-none">
@@ -773,6 +928,8 @@
       </div>
 
 
+      <!-- ENLACES -->
+
       <div>
 
         <h2 class="mb-4 text-xs font-bold uppercase tracking-[.17em] text-[#a42b31]">
@@ -784,25 +941,37 @@
           <ul class="space-y-3">
 
             <li>
-              <a href="#inicio" class="canva-link focus-ring text-sm text-white/70">
+              <a
+                href="#inicio"
+                class="canva-link focus-ring text-sm text-white/70"
+              >
                 Inicio
               </a>
             </li>
 
             <li>
-              <a href="#identidad" class="canva-link focus-ring text-sm text-white/70">
+              <a
+                href="#identidad"
+                class="canva-link focus-ring text-sm text-white/70"
+              >
                 Identidad
               </a>
             </li>
 
             <li>
-              <a href="#territorios" class="canva-link focus-ring text-sm text-white/70">
+              <a
+                href="#territorios"
+                class="canva-link focus-ring text-sm text-white/70"
+              >
                 Territorios
               </a>
             </li>
 
             <li>
-              <a href="#tienda" class="canva-link focus-ring text-sm text-white/70">
+              <a
+                href="#tienda"
+                class="canva-link focus-ring text-sm text-white/70"
+              >
                 Tienda
               </a>
             </li>
@@ -814,43 +983,56 @@
       </div>
 
 
+      <!-- REDES -->
+
       <div>
 
-     <h2 class="mb-4 text-xs font-bold uppercase tracking-[.17em] text-[#a42b31]">
-  Redes
-</h2>
+        <h2 class="mb-4 text-xs font-bold uppercase tracking-[.17em] text-[#a42b31]">
+          Redes
+        </h2>
 
-<div class="flex gap-2">
 
-  <!-- Instagram -->
-  <a
-    href="https://instagram.com/caoticco_"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="social-icon"
-    aria-label="Instagram"
-  >
-    <i class="fa-brands fa-instagram"></i>
-  </a>
+        <div class="flex gap-2">
 
-  <!-- TikTok -->
-  <a
-    href="https://tiktok.com/@_caoticco"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="social-icon"
-    aria-label="TikTok"
-  >
-    <i class="fa-brands fa-tiktok"></i>
-  </a>
+          <!-- INSTAGRAM -->
 
-</div>
+          <a
+            href="https://instagram.com/caoticco_"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-icon"
+            aria-label="Instagram"
+          >
+
+            <i class="fa-brands fa-instagram"></i>
+
+          </a>
+
+
+          <!-- TIKTOK -->
+
+          <a
+            href="https://tiktok.com/@_caoticco"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-icon"
+            aria-label="TikTok"
+          >
+
+            <i class="fa-brands fa-tiktok"></i>
+
+          </a>
+
+        </div>
+
 
         <p class="mt-6 text-xs uppercase tracking-[.13em] text-white/40">
           © 2026 CAOTICCO. TODOS LOS DERECHOS RESERVADOS.
-          </p>
-          
-          <p class="mt-6 text-xs uppercase tracking-[.13em] text-white/40">FUNDADORES: VALERIA SOLER Y CHRISTIAN FITZGERALD
+        </p>
+
+
+        <p class="mt-6 text-xs uppercase tracking-[.13em] text-white/40">
+          FUNDADORES: VALERIA SOLER Y CHRISTIAN FITZGERALD
         </p>
 
       </div>
@@ -860,8 +1042,125 @@
   </footer>
 
 
-  
+
+  <!-- =====================================================
+       CAMBIO DE IMÁGENES DEL PRODUCTO 3
+  ====================================================== -->
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+
+      /* ===============================================
+         INICIALIZAR LUCIDE
+      =============================================== */
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+
+      /* ===============================================
+         PRODUCTO 3
+      =============================================== */
+
+      const productImage =
+        document.getElementById("product-image-3");
+
+
+      /* ===============================================
+         FOTOS
+      =============================================== */
+
+      const productImages = [
+        "logo.jpeg",
+        "lince.png",
+        "inicio.jpeg"
+      ];
+
+
+      let currentImage = 0;
+
+
+      /* ===============================================
+         VERIFICAR QUE LA IMAGEN EXISTA
+      =============================================== */
+
+      if (!productImage) {
+        console.error(
+          "No se encontró #product-image-3"
+        );
+
+        return;
+      }
+
+
+      /* ===============================================
+         CLICK EN LA FOTO
+      =============================================== */
+
+      productImage.addEventListener(
+        "click",
+        function (event) {
+
+          event.preventDefault();
+          event.stopPropagation();
+
+
+          /* Siguiente imagen */
+
+          currentImage++;
+
+
+          /* Volver a la primera */
+
+          if (
+            currentImage >= productImages.length
+          ) {
+
+            currentImage = 0;
+
+          }
+
+
+          /* Desvanecer */
+
+          productImage.style.opacity = "0";
+
+
+          setTimeout(
+            function () {
+
+              productImage.src =
+                productImages[currentImage];
+
+              productImage.style.opacity = "1";
+
+            },
+            200
+          );
+
+        }
+      );
+
+
+      /* ===============================================
+         ESTILOS DEL CLICK
+      =============================================== */
+
+      productImage.style.cursor = "pointer";
+
+      productImage.style.transition =
+        "opacity 0.2s ease";
+
+
+    });
+
+  </script>
+
 
 </body>
-</html>
 
+</html>
+```
