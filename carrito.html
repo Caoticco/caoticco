@@ -1931,7 +1931,13 @@ const products = [
 
         price:0,
 
-        image:""
+        image:"tote1.jpeg"
+        
+    images: [
+        "tote1.jpeg",
+        "tote2.jpeg",
+        "tote3.jpeg"
+    ]
     },
 
 
@@ -2697,6 +2703,115 @@ function toggleUserMenu(){
         .classList.toggle("open");
 
 }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+
+      /* ===============================================
+         INICIALIZAR LUCIDE
+      =============================================== */
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+
+      /* ===============================================
+         PRODUCTO 3
+      =============================================== */
+
+      const productImage =
+        document.getElementById("product-image-3");
+
+
+      /* ===============================================
+         FOTOS
+      =============================================== */
+
+      const productImages = [
+        "tote1.jpeg",
+        "tote2.jpeg",
+        "tote3.jpeg"
+      ];
+
+
+      let currentImage = 0;
+
+
+      /* ===============================================
+         VERIFICAR QUE LA IMAGEN EXISTA
+      =============================================== */
+
+      if (!productImage) {
+        console.error(
+          "No se encontró #product-image-3"
+        );
+
+        return;
+      }
+
+
+      /* ===============================================
+         CLICK EN LA FOTO
+      =============================================== */
+
+      productImage.addEventListener(
+        "click",
+        function (event) {
+
+          event.preventDefault();
+          event.stopPropagation();
+
+
+          /* Siguiente imagen */
+
+          currentImage++;
+
+
+          /* Volver a la primera */
+
+          if (
+            currentImage >= productImages.length
+          ) {
+
+            currentImage = 0;
+
+          }
+
+
+          /* Desvanecer */
+
+          productImage.style.opacity = "0";
+
+
+          setTimeout(
+            function () {
+
+              productImage.src =
+                productImages[currentImage];
+
+              productImage.style.opacity = "1";
+
+            },
+            200
+          );
+
+        }
+      );
+
+
+      /* ===============================================
+         ESTILOS DEL CLICK
+      =============================================== */
+
+      productImage.style.cursor = "pointer";
+
+      productImage.style.transition =
+        "opacity 0.2s ease";
+
+
+    });
 
 
 /* =========================================
