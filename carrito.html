@@ -33,7 +33,6 @@
     --line:rgba(244,240,235,.16);
     --muted:rgba(244,240,235,.55);
     --danger:#d65a5a;
-    --success:#6fbf73;
 }
 
 
@@ -184,7 +183,7 @@ body::before{
 
 
 /* =========================================
-   BOTÓN MENÚ MÓVIL
+   MENÚ MÓVIL
 ========================================= */
 
 .mobile-menu-button{
@@ -216,11 +215,6 @@ body::before{
 
     background:var(--wine);
 }
-
-
-/* =========================================
-   MENÚ MÓVIL
-========================================= */
 
 .mobile-menu{
 
@@ -429,7 +423,7 @@ body::before{
 
 
 /* =========================================
-   CONTADOR DEL CARRITO
+   CONTADOR CARRITO
 ========================================= */
 
 .cart-count{
@@ -674,6 +668,11 @@ body::before{
         #0c0a0a;
 
     overflow:hidden;
+}
+
+.product-image.clickable{
+
+    cursor:pointer;
 }
 
 .product-image img{
@@ -1369,8 +1368,6 @@ footer p{
     </nav>
 
 
-    <!-- MENÚ MÓVIL -->
-
     <button
         class="mobile-menu-button"
         id="mobileMenuButton"
@@ -1793,6 +1790,10 @@ async function checkSession(){
 
 const products = [
 
+    /* =====================================
+       PRODUCTO 1
+    ===================================== */
+
     {
         id:1,
 
@@ -1808,6 +1809,10 @@ const products = [
         image:"Pantalon.jpeg"
     },
 
+
+    /* =====================================
+       PRODUCTO 2
+    ===================================== */
 
     {
         id:2,
@@ -1827,6 +1832,10 @@ const products = [
     },
 
 
+    /* =====================================
+       PRODUCTO 3
+    ===================================== */
+
     {
         id:3,
 
@@ -1835,9 +1844,9 @@ const products = [
         category:"Transformable",
 
         description:
-            "???",
+            "Tote bag transformable con diseño exclusivo CAOTICCO.",
 
-        price:0,
+        price:50000,
 
         image:"tote1.jpeg",
 
@@ -1849,6 +1858,10 @@ const products = [
     },
 
 
+    /* =====================================
+       PRODUCTO 4
+    ===================================== */
+
     {
         id:4,
 
@@ -1857,7 +1870,7 @@ const products = [
         category:"Limited",
 
         description:
-            "???",
+            "Próximamente.",
 
         price:0,
 
@@ -1920,13 +1933,12 @@ function renderProducts(){
 
 
                 <div
-                    class="product-image"
-
+                    class="product-image
+                    ${product.images ? "clickable" : ""}"
                     ${
                         product.images
                         ?
-                        `onclick="changeProductImage(${product.id})"
-                         style="cursor:pointer;"`
+                        `onclick="changeProductImage(${product.id})"`
                         :
                         ""
                     }
@@ -1976,32 +1988,19 @@ function renderProducts(){
 
                         <div class="price-box">
 
+
                             ${
                                 product.category === "Agotado"
 
                                 ?
 
-                                `<span
-                                    class="promo-label"
-                                >
+                                `<span class="promo-label">
                                     AGOTADO
                                 </span>`
 
                                 :
 
                                 `
-                                    ${
-                                        product.oldPrice
-                                        ?
-                                        `
-                                            <span class="price-old">
-                                                ${formatPrice(product.oldPrice)}
-                                            </span>
-                                        `
-                                        :
-                                        ""
-                                    }
-
                                     ${
                                         product.price > 0
                                         ?
@@ -2011,18 +2010,21 @@ function renderProducts(){
                                             </span>
                                         `
                                         :
-                                        ""
+                                        `
+                                            <span class="promo-label">
+                                                PRÓXIMAMENTE
+                                            </span>
+                                        `
                                     }
                                 `
                             }
+
 
                         </div>
 
 
                         ${
                             product.category !== "Agotado"
-                            &&
-                            product.price > 0
 
                             ?
 
@@ -2147,11 +2149,9 @@ function addToCart(id){
     }
 
 
-    if(
-        product.category === "Agotado" ||
-        !product.price ||
-        product.price <= 0
-    ){
+    /* SOLO AGOTADOS NO SE PUEDEN AGREGAR */
+
+    if(product.category === "Agotado"){
 
         return;
 
@@ -2314,9 +2314,21 @@ function renderCart(){
                             }
 
 
-                            <span class="cart-price-promo">
-                                ${formatPrice(item.price)}
-                            </span>
+                            ${
+                                item.price > 0
+                                ?
+                                `
+                                    <span class="cart-price-promo">
+                                        ${formatPrice(item.price)}
+                                    </span>
+                                `
+                                :
+                                `
+                                    <span class="cart-price-promo">
+                                        Precio por definir
+                                    </span>
+                                `
+                            }
 
 
                         </div>
@@ -2505,7 +2517,6 @@ function toggleMobileMenu(){
     const menu =
         document.getElementById("mobileMenu");
 
-
     menu.classList.toggle("open");
 
 }
@@ -2515,7 +2526,6 @@ function closeMobileMenu(){
 
     const menu =
         document.getElementById("mobileMenu");
-
 
     menu.classList.remove("open");
 
@@ -2635,7 +2645,7 @@ function checkout(){
 
 
 /* =========================================
-   CERRAR MENÚ USUARIO AL HACER CLIC FUERA
+   CERRAR USUARIO AL HACER CLIC AFUERA
 ========================================= */
 
 document.addEventListener(
