@@ -4,196 +4,95 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* =======================================================
-     LUCIDE ICONS
-  ======================================================= */
-
-  if (window.lucide) {
-    lucide.createIcons();
-  }
-
-
-  /* =======================================================
+  /* =========================================================
      UTILIDADES
-  ======================================================= */
+  ========================================================= */
 
   const $ = (selector, parent = document) =>
     parent.querySelector(selector);
 
   const $$ = (selector, parent = document) =>
-    Array.from(parent.querySelectorAll(selector));
+    [...parent.querySelectorAll(selector)];
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat("es-CO", {
+  const formatPrice = (price) =>
+    new Intl.NumberFormat("es-CO", {
       style: "currency",
       currency: "COP",
       maximumFractionDigits: 0
     }).format(price);
-  };
 
 
-  /* =======================================================
-     ALTURA REAL DEL VIEWPORT
-  ======================================================= */
+  /* =========================================================
+     ALTURA DEL VIEWPORT
+  ========================================================= */
 
-  function updateViewportHeight() {
+  const setViewportHeight = () => {
     document.documentElement.style.setProperty(
       "--vh",
       `${window.innerHeight * 0.01}px`
     );
-  }
+  };
 
-  updateViewportHeight();
+  setViewportHeight();
 
-  let resizeTimeout;
-
-  window.addEventListener("resize", () => {
-
-    clearTimeout(resizeTimeout);
-
-    resizeTimeout = setTimeout(() => {
-      updateViewportHeight();
-    }, 100);
-
-  });
+  window.addEventListener("resize", setViewportHeight);
 
 
-  window.addEventListener(
-    "orientationchange",
-    () => {
-      setTimeout(updateViewportHeight, 150);
-    },
-    { passive: true }
-  );
-
-
-  /* =======================================================
-     MENÚ MOBILE
-  ======================================================= */
+  /* =========================================================
+     MENÚ MÓVIL
+  ========================================================= */
 
   const menuToggle = $("#menu-toggle");
   const mobileMenu = $("#mobile-menu");
 
-  function updateMenuIcon(isOpen) {
-
-    if (!menuToggle) return;
-
-    const icon = $("i", menuToggle);
-
-    if (!icon) return;
-
-    icon.setAttribute(
-      "data-lucide",
-      isOpen ? "x" : "menu"
-    );
-
-    if (window.lucide) {
-      lucide.createIcons();
-    }
-  }
-
-
-  function closeMobileMenu() {
-
-    if (!mobileMenu || !menuToggle) return;
-
-    mobileMenu.classList.remove("open");
-
-    menuToggle.setAttribute(
-      "aria-expanded",
-      "false"
-    );
-
-    menuToggle.setAttribute(
-      "aria-label",
-      "Abrir menú de navegación"
-    );
-
-    updateMenuIcon(false);
-  }
-
-
   if (menuToggle && mobileMenu) {
 
     menuToggle.addEventListener("click", () => {
-
-      const isOpen =
-        mobileMenu.classList.toggle("open");
-
-      menuToggle.setAttribute(
-        "aria-expanded",
-        String(isOpen)
-      );
-
-      menuToggle.setAttribute(
-        "aria-label",
-        isOpen
-          ? "Cerrar menú de navegación"
-          : "Abrir menú de navegación"
-      );
-
-      updateMenuIcon(isOpen);
-
+      mobileMenu.classList.toggle("active");
+      document.body.classList.toggle("menu-open");
     });
-
 
     $$("#mobile-menu a").forEach((link) => {
-
       link.addEventListener("click", () => {
-        closeMobileMenu();
+        mobileMenu.classList.remove("active");
+        document.body.classList.remove("menu-open");
       });
-
     });
-
 
     window.addEventListener("resize", () => {
-
-      if (window.innerWidth >= 1024) {
-        closeMobileMenu();
+      if (window.innerWidth > 1000) {
+        mobileMenu.classList.remove("active");
+        document.body.classList.remove("menu-open");
       }
-
     });
-
   }
 
 
-  /* =======================================================
-     ANIMACIONES REVEAL
-  ======================================================= */
+  /* =========================================================
+     REVEAL / ANIMACIONES
+  ========================================================= */
 
   const revealElements = $$(".reveal");
 
   if ("IntersectionObserver" in window) {
 
-    const observer = new IntersectionObserver(
+    const revealObserver = new IntersectionObserver(
       (entries) => {
-
         entries.forEach((entry) => {
 
           if (entry.isIntersecting) {
-
-            entry.target.classList.add(
-              "in-view"
-            );
-
-            observer.unobserve(
-              entry.target
-            );
-
+            entry.target.classList.add("in-view");
           }
 
         });
-
       },
       {
-        threshold: 0.12,
-        rootMargin: "0px 0px -40px 0px"
+        threshold: 0.12
       }
     );
 
-
     revealElements.forEach((element) => {
-      observer.observe(element);
+      revealObserver.observe(element);
     });
 
   } else {
@@ -205,12 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  /* =======================================================
+  /* =========================================================
      PRODUCTOS
-  ======================================================= */
+  ========================================================= */
 
   const products = [
-
     {
       id: 1,
       name: "CAOTICCO TEE",
@@ -229,133 +127,120 @@ document.addEventListener("DOMContentLoaded", () => {
 
     {
       id: 3,
-      name: "CAOTICCO CAP",
-      price: 69900,
-      description: "Gorra clásica con identidad CAOTICCO.",
-      icon: "hat"
+      name: "TOTE BAG BASIC",
+      price: 50000,
+      description:
+        "Una pieza esencial elevada por un diseño exclusivo y acabados premium.",
+      icon: "shopping-bag"
     }
-
   ];
 
 
-  /* =======================================================
-     FOTOS PRODUCTO 3
-  ======================================================= */
-
-  const productImages3 = [
-    "logo.jpeg",
-    "lince.png",
-    "inicio.jpeg"
-  ];
-
-  let currentImage3 = 0;
-
-
-  function setupProductImage3() {
-
-    const productImage3 =
-      document.getElementById(
-        "product-image-3"
-      );
-
-    if (!productImage3) {
-      return;
-    }
-
-
-    productImage3.style.cursor =
-      "pointer";
-
-
-    productImage3.addEventListener(
-      "click",
-      (event) => {
-
-        /*
-          Evita que el clic de la imagen
-          active otros eventos del producto.
-        */
-
-        event.stopPropagation();
-
-
-        currentImage3++;
-
-
-        if (
-          currentImage3 >=
-          productImages3.length
-        ) {
-
-          currentImage3 = 0;
-
-        }
-
-
-        productImage3.src =
-          productImages3[currentImage3];
-
-      }
-    );
-
-  }
-
-
-  setupProductImage3();
-
-
-  /* =======================================================
+  /* =========================================================
      CARRITO
-  ======================================================= */
+  ========================================================= */
 
   let cart = [];
 
-
   try {
-
-    const savedCart =
-      localStorage.getItem(
-        "caoticco_cart"
-      );
-
-    if (savedCart) {
-      cart = JSON.parse(savedCart);
-    }
-
+    cart = JSON.parse(localStorage.getItem("caoticcoCart")) || [];
   } catch (error) {
+    cart = [];
+  }
 
-    console.warn(
-      "No se pudo recuperar el carrito.",
-      error
+
+  const saveCart = () => {
+    localStorage.setItem(
+      "caoticcoCart",
+      JSON.stringify(cart)
+    );
+  };
+
+
+  const getProduct = (productId) => {
+    return products.find(
+      (product) => product.id === Number(productId)
+    );
+  };
+
+
+  const addToCart = (productId) => {
+
+    const product = getProduct(productId);
+
+    if (!product) return;
+
+    const existingProduct = cart.find(
+      (item) => item.id === product.id
     );
 
-    cart = [];
+    if (existingProduct) {
 
-  }
+      existingProduct.quantity += 1;
 
+    } else {
 
-  function saveCart() {
-
-    try {
-
-      localStorage.setItem(
-        "caoticco_cart",
-        JSON.stringify(cart)
-      );
-
-    } catch (error) {
-
-      console.warn(
-        "No se pudo guardar el carrito.",
-        error
-      );
+      cart.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: 1
+      });
 
     }
 
-  }
+    saveCart();
+    renderCart();
+
+    showNotification(
+      `${product.name} añadido al carrito`
+    );
+  };
 
 
-  function getCartQuantity() {
+  const removeFromCart = (productId) => {
+
+    cart = cart.filter(
+      (item) => item.id !== Number(productId)
+    );
+
+    saveCart();
+    renderCart();
+  };
+
+
+  const changeQuantity = (productId, amount) => {
+
+    const item = cart.find(
+      (product) => product.id === Number(productId)
+    );
+
+    if (!item) return;
+
+    item.quantity += amount;
+
+    if (item.quantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+
+    saveCart();
+    renderCart();
+  };
+
+
+  const getCartTotal = () => {
+
+    return cart.reduce(
+      (total, item) =>
+        total + item.price * item.quantity,
+      0
+    );
+
+  };
+
+
+  const getCartCount = () => {
 
     return cart.reduce(
       (total, item) =>
@@ -363,567 +248,511 @@ document.addEventListener("DOMContentLoaded", () => {
       0
     );
 
-  }
+  };
 
 
-  function getCartTotal() {
-
-    return cart.reduce(
-      (total, item) =>
-        total +
-        item.price *
-        item.quantity,
-      0
-    );
-
-  }
-
-
-  /* =======================================================
+  /* =========================================================
      ELEMENTOS DEL CARRITO
-  ======================================================= */
+  ========================================================= */
 
-  const cartButton =
-    $("#cart-button");
+  const cartDrawer = $("#cart-drawer");
+  const cartItems = $("#cart-items");
+  const cartTotal = $("#cart-total");
+  const cartCount = $("#cart-count");
+  const cartButton = $("#cart-button");
+  const cartClose = $("#cart-close");
 
-  const cartModal =
-    $("#cart-modal");
 
-  const cartPanel =
-    $(".cart-panel", cartModal || document);
+  const openCart = () => {
 
-  const cartItems =
-    $("#cart-items");
+    if (!cartDrawer) return;
 
-  const cartCount =
-    $("#cart-count");
+    cartDrawer.classList.add("active");
+    document.body.classList.add("cart-open");
 
-  const cartTotal =
-    $("#cart-total");
+  };
 
-  const cartClose =
-    $("#cart-close");
 
-  const cartBackdrop =
-    $(".cart-backdrop");
+  const closeCart = () => {
 
-  const checkoutButton =
-    $("#checkout-button");
+    if (!cartDrawer) return;
 
+    cartDrawer.classList.remove("active");
+    document.body.classList.remove("cart-open");
 
-  /* =======================================================
-     ACTUALIZAR CONTADOR
-  ======================================================= */
+  };
 
-  function updateCartCount() {
-
-    if (!cartCount) return;
-
-    const quantity =
-      getCartQuantity();
-
-    cartCount.textContent =
-      quantity;
-
-    if (quantity > 0) {
-
-      cartCount.classList.add(
-        "visible"
-      );
-
-    } else {
-
-      cartCount.classList.remove(
-        "visible"
-      );
-
-    }
-
-  }
-
-
-  /* =======================================================
-     ABRIR CARRITO
-  ======================================================= */
-
-  function openCart() {
-
-    if (!cartModal) return;
-
-    cartModal.classList.add("open");
-
-    cartModal.setAttribute(
-      "aria-hidden",
-      "false"
-    );
-
-    document.body.classList.add(
-      "modal-open"
-    );
-
-    renderCart();
-
-  }
-
-
-  /* =======================================================
-     CERRAR CARRITO
-  ======================================================= */
-
-  function closeCart() {
-
-    if (!cartModal) return;
-
-    cartModal.classList.remove(
-      "open"
-    );
-
-    cartModal.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-    if (
-      !authModal ||
-      !authModal.classList.contains(
-        "open"
-      )
-    ) {
-
-      document.body.classList.remove(
-        "modal-open"
-      );
-
-    }
-
-  }
-
-
-  /* =======================================================
-     RENDER CARRITO
-  ======================================================= */
-
-  function renderCart() {
-
-    if (!cartItems) return;
-
-    updateCartCount();
-
-
-    if (cart.length === 0) {
-
-      cartItems.innerHTML = `
-
-        <div class="empty-cart">
-
-          <i
-            data-lucide="shopping-bag"
-            width="42"
-            height="42">
-          </i>
-
-          <p>
-            Tu carrito está vacío.
-          </p>
-
-          <button
-            type="button"
-            class="cta cta-wine"
-            id="continue-shopping">
-            Explorar productos
-          </button>
-
-        </div>
-
-      `;
-
-
-      if (window.lucide) {
-        lucide.createIcons();
-      }
-
-
-      const continueButton =
-        $("#continue-shopping");
-
-
-      if (continueButton) {
-
-        continueButton.addEventListener(
-          "click",
-          closeCart
-        );
-
-      }
-
-    } else {
-
-      cartItems.innerHTML = "";
-
-
-      cart.forEach((item) => {
-
-        const article =
-          document.createElement(
-            "article"
-          );
-
-        article.className =
-          "cart-item";
-
-        article.dataset.id =
-          item.id;
-
-
-        article.innerHTML = `
-
-          <div class="cart-item-image">
-
-            <i
-              data-lucide="${item.icon || "package"}"
-              width="30"
-              height="30">
-            </i>
-
-          </div>
-
-
-          <div class="cart-item-info">
-
-            <h3 class="cart-item-name">
-              ${escapeHTML(item.name)}
-            </h3>
-
-            <span class="cart-item-price">
-              ${formatPrice(item.price)}
-            </span>
-
-
-            <div class="cart-item-controls">
-
-              <button
-                type="button"
-                class="quantity-button decrease"
-                data-id="${item.id}">
-                −
-              </button>
-
-
-              <span class="quantity-value">
-                ${item.quantity}
-              </span>
-
-
-              <button
-                type="button"
-                class="quantity-button increase"
-                data-id="${item.id}">
-                +
-              </button>
-
-            </div>
-
-
-            <button
-              type="button"
-              class="cart-remove"
-              data-id="${item.id}">
-              Eliminar
-            </button>
-
-          </div>
-
-
-          <strong class="cart-item-total">
-
-            ${formatPrice(
-              item.price *
-              item.quantity
-            )}
-
-          </strong>
-
-        `;
-
-
-        cartItems.appendChild(
-          article
-        );
-
-      });
-
-
-      $$(".increase", cartItems)
-        .forEach((button) => {
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              const id =
-                Number(
-                  button.dataset.id
-                );
-
-              changeQuantity(id, 1);
-
-            }
-          );
-
-        });
-
-
-      $$(".decrease", cartItems)
-        .forEach((button) => {
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              const id =
-                Number(
-                  button.dataset.id
-                );
-
-              changeQuantity(id, -1);
-
-            }
-          );
-
-        });
-
-
-      $$(".cart-remove", cartItems)
-        .forEach((button) => {
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              const id =
-                Number(
-                  button.dataset.id
-                );
-
-              removeFromCart(id);
-
-            }
-          );
-
-        });
-
-
-      if (window.lucide) {
-        lucide.createIcons();
-      }
-
-    }
-
-
-    if (cartTotal) {
-
-      cartTotal.textContent =
-        formatPrice(
-          getCartTotal()
-        );
-
-    }
-
-  }
-
-
-  /* =======================================================
-     AÑADIR AL CARRITO
-  ======================================================= */
-
-  function addToCart(productId) {
-
-    const product =
-      products.find(
-        (item) =>
-          item.id === productId
-      );
-
-
-    if (!product) return;
-
-
-    const existing =
-      cart.find(
-        (item) =>
-          item.id === productId
-      );
-
-
-    if (existing) {
-
-      existing.quantity += 1;
-
-    } else {
-
-      cart.push({
-        ...product,
-        quantity: 1
-      });
-
-    }
-
-
-    saveCart();
-
-    renderCart();
-
-
-    showNotification(
-      `${product.name} añadido al carrito`
-    );
-
-  }
-
-
-  /* =======================================================
-     CAMBIAR CANTIDAD
-  ======================================================= */
-
-  function changeQuantity(
-    productId,
-    amount
-  ) {
-
-    const item =
-      cart.find(
-        (product) =>
-          product.id === productId
-      );
-
-
-    if (!item) return;
-
-
-    item.quantity += amount;
-
-
-    if (item.quantity <= 0) {
-
-      cart =
-        cart.filter(
-          (product) =>
-            product.id !== productId
-        );
-
-    }
-
-
-    saveCart();
-
-    renderCart();
-
-  }
-
-
-  /* =======================================================
-     ELIMINAR PRODUCTO
-  ======================================================= */
-
-  function removeFromCart(
-    productId
-  ) {
-
-    cart =
-      cart.filter(
-        (item) =>
-          item.id !== productId
-      );
-
-
-    saveCart();
-
-    renderCart();
-
-  }
-
-
-  /* =======================================================
-     BOTONES AÑADIR
-  ======================================================= */
-
-  $$("[data-product-id]")
-    .forEach((button) => {
-
-      button.addEventListener(
-        "click",
-        (event) => {
-
-          /*
-            Si es la imagen del producto,
-            no añadir al carrito.
-          */
-
-          if (
-            event.target.closest(
-              "#product-image-3"
-            )
-          ) {
-            return;
-          }
-
-
-          const productId =
-            Number(
-              button.dataset.productId
-            );
-
-
-          if (
-            !Number.isNaN(
-              productId
-            )
-          ) {
-
-            addToCart(
-              productId
-            );
-
-          }
-
-        }
-      );
-
-    });
-
-
-  /* =======================================================
-     EVENTOS CARRITO
-  ======================================================= */
 
   if (cartButton) {
-
-    cartButton.addEventListener(
-      "click",
-      openCart
-    );
-
+    cartButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      openCart();
+    });
   }
 
 
   if (cartClose) {
+    cartClose.addEventListener("click", closeCart);
+  }
 
-    cartClose.addEventListener(
-      "click",
-      closeCart
-    );
+
+  const renderCart = () => {
+
+    if (cartCount) {
+      cartCount.textContent = getCartCount();
+    }
+
+    if (cartTotal) {
+      cartTotal.textContent =
+        formatPrice(getCartTotal());
+    }
+
+    if (!cartItems) return;
+
+    if (cart.length === 0) {
+
+      cartItems.innerHTML = `
+        <p class="cart-empty">
+          Tu carrito está vacío.
+        </p>
+      `;
+
+      return;
+    }
+
+
+    cartItems.innerHTML = cart.map((item) => `
+
+      <div class="cart-item">
+
+        <div class="cart-item-info">
+
+          <h4>${item.name}</h4>
+
+          <p>${formatPrice(item.price)}</p>
+
+        </div>
+
+        <div class="cart-item-controls">
+
+          <button
+            type="button"
+            class="quantity-minus"
+            data-cart-minus="${item.id}"
+          >
+            −
+          </button>
+
+          <span>${item.quantity}</span>
+
+          <button
+            type="button"
+            class="quantity-plus"
+            data-cart-plus="${item.id}"
+          >
+            +
+          </button>
+
+        </div>
+
+        <button
+          type="button"
+          class="cart-item-remove"
+          data-cart-remove="${item.id}"
+        >
+          ×
+        </button>
+
+      </div>
+
+    `).join("");
+
+  };
+
+
+  /* =========================================================
+     CONTROLES DEL CARRITO
+  ========================================================= */
+
+  document.addEventListener("click", (event) => {
+
+    const addButton =
+      event.target.closest("[data-add-cart]");
+
+    if (addButton) {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const productId =
+        Number(addButton.dataset.addCart);
+
+      if (!Number.isNaN(productId)) {
+        addToCart(productId);
+      }
+
+      return;
+    }
+
+
+    const plusButton =
+      event.target.closest("[data-cart-plus]");
+
+    if (plusButton) {
+
+      const productId =
+        Number(plusButton.dataset.cartPlus);
+
+      changeQuantity(productId, 1);
+
+      return;
+    }
+
+
+    const minusButton =
+      event.target.closest("[data-cart-minus]");
+
+    if (minusButton) {
+
+      const productId =
+        Number(minusButton.dataset.cartMinus);
+
+      changeQuantity(productId, -1);
+
+      return;
+    }
+
+
+    const removeButton =
+      event.target.closest("[data-cart-remove]");
+
+    if (removeButton) {
+
+      const productId =
+        Number(removeButton.dataset.cartRemove);
+
+      removeFromCart(productId);
+
+    }
+
+  });
+
+
+  /* =========================================================
+     RENDER PRODUCTOS
+  ========================================================= */
+
+  const productsContainer =
+    $("#products-container");
+
+
+  if (productsContainer) {
+    renderProducts();
+  }
+
+
+  function renderProducts() {
+
+    if (!productsContainer) return;
+
+
+    productsContainer.innerHTML = products.map(
+      (product, index) => {
+
+        /* ===============================================
+           PRODUCTO 3 — TOTE BAG CON FOTO CLICKEABLE
+        =============================================== */
+
+        if (product.id === 3) {
+
+          return `
+
+            <article
+              class="product-card reveal in-view"
+              data-product-id="3"
+              data-product-name="TOTE BAG BASIC"
+              data-product-price="50000"
+            >
+
+              <div class="product-image">
+
+                <span class="product-number">
+                  03
+                </span>
+
+                <img
+                  id="product-image-3"
+                  class="clickable-product-image"
+                  src="logo.jpeg"
+                  alt="Tote Bag Basic"
+                  data-image-index="0"
+                >
+
+              </div>
+
+
+              <div class="product-info">
+
+                <h3 class="display product-name">
+                  TOTE BAG BASIC
+                </h3>
+
+                <p class="product-description">
+                  Una pieza esencial elevada por un diseño exclusivo y acabados premium.
+                </p>
+
+
+                <div class="product-bottom">
+
+                  <strong class="product-price">
+                    $50.000
+                  </strong>
+
+                  <button
+                    type="button"
+                    class="product-add"
+                    data-add-cart="3"
+                  >
+
+                    <i
+                      data-lucide="plus"
+                      width="17"
+                    ></i>
+
+                    Añadir
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }
+
+
+        /* ===============================================
+           PRODUCTOS 1 Y 2
+        =============================================== */
+
+        return `
+
+          <article
+            class="product-card reveal in-view"
+            data-product-id="${product.id}"
+            data-product-name="${product.name}"
+            data-product-price="${product.price}"
+          >
+
+            <div class="product-image">
+
+              <span class="product-number">
+                ${String(index + 1).padStart(2, "0")}
+              </span>
+
+              <i
+                data-lucide="${product.icon}"
+                width="85"
+                height="85"
+              ></i>
+
+            </div>
+
+
+            <div class="product-info">
+
+              <h3 class="display product-name">
+                ${product.name}
+              </h3>
+
+              <p class="product-description">
+                ${product.description}
+              </p>
+
+
+              <div class="product-bottom">
+
+                <strong class="product-price">
+                  ${formatPrice(product.price)}
+                </strong>
+
+                <button
+                  type="button"
+                  class="product-add"
+                  data-add-cart="${product.id}"
+                >
+
+                  <i
+                    data-lucide="plus"
+                    width="17"
+                  ></i>
+
+                  Añadir
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        `;
+
+      }
+    ).join("");
+
+
+    /* =====================================================
+       ICONOS LUCIDE
+    ===================================================== */
+
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+
+
+    /* =====================================================
+       CLICK EN LA IMAGEN DEL PRODUCTO 3
+    ===================================================== */
+
+    const productImage3 =
+      $("#product-image-3");
+
+
+    if (productImage3) {
+
+      productImage3.addEventListener(
+        "click",
+        (event) => {
+
+          /*
+             IMPORTANTE:
+             Evita que el clic en la imagen
+             interfiera con otras funciones.
+          */
+
+          event.preventDefault();
+          event.stopPropagation();
+
+
+          const images = [
+            "logo.jpeg",
+            "lince.png",
+            "inicio.jpeg"
+          ];
+
+
+          let currentIndex =
+            Number(
+              productImage3.dataset.imageIndex || 0
+            );
+
+
+          currentIndex++;
+
+
+          if (currentIndex >= images.length) {
+            currentIndex = 0;
+          }
+
+
+          /*
+             Efecto suave
+          */
+
+          productImage3.style.opacity = "0";
+
+
+          setTimeout(() => {
+
+            productImage3.src =
+              images[currentIndex];
+
+            productImage3.dataset.imageIndex =
+              currentIndex;
+
+            productImage3.style.opacity = "1";
+
+          }, 180);
+
+        }
+      );
+
+    }
 
   }
 
 
-  if (cartBackdrop) {
+  /* =========================================================
+     TRANSICIÓN DE LA IMAGEN
+  ========================================================= */
 
-    cartBackdrop.addEventListener(
-      "click",
-      closeCart
-    );
+  const imageStyle = document.createElement("style");
+
+  imageStyle.textContent = `
+    .clickable-product-image {
+      cursor: pointer;
+      transition: opacity 0.18s ease;
+    }
+
+    .clickable-product-image:hover {
+      opacity: 0.85;
+    }
+  `;
+
+  document.head.appendChild(imageStyle);
+
+
+  /* =========================================================
+     NOTIFICACIONES
+  ========================================================= */
+
+  function showNotification(message) {
+
+    let notification =
+      $("#caoticco-notification");
+
+
+    if (!notification) {
+
+      notification =
+        document.createElement("div");
+
+      notification.id =
+        "caoticco-notification";
+
+      notification.className =
+        "caoticco-notification";
+
+      document.body.appendChild(notification);
+
+    }
+
+
+    notification.textContent = message;
+
+    notification.classList.add("active");
+
+
+    setTimeout(() => {
+
+      notification.classList.remove("active");
+
+    }, 2500);
 
   }
+
+
+  /* =========================================================
+     WHATSAPP — CONTINUAR COMPRA
+  ========================================================= */
+
+  const checkoutButton =
+    $("#checkout-button");
 
 
   if (checkoutButton) {
@@ -939,580 +768,36 @@ document.addEventListener("DOMContentLoaded", () => {
           );
 
           return;
-
         }
 
 
-        showNotification(
-          "El checkout estará disponible próximamente."
-        );
+        let message =
+          "Hola, quiero comprar en CAOTICCO.%0A%0A";
 
-      }
-    );
 
-  }
+        cart.forEach((item) => {
 
-
-  /* =======================================================
-     LOGIN / REGISTRO
-  ======================================================= */
-
-  const authModal =
-    $("#auth-modal");
-
-  const authClose =
-    $("#auth-close");
-
-  const authBackdrop =
-    $(".auth-backdrop");
-
-  const loginView =
-    $("#login-view");
-
-  const registerView =
-    $("#register-view");
-
-  const loginForm =
-    $("#login-form");
-
-  const registerForm =
-    $("#register-form");
-
-  const loginMessage =
-    $("#login-message");
-
-  const registerMessage =
-    $("#register-message");
-
-  const loginButton =
-    $("#login-button");
-
-  const mobileLoginButton =
-    $("#mobile-login-button");
-
-  const switchToRegister =
-    $("#switch-to-register");
-
-  const switchToLogin =
-    $("#switch-to-login");
-
-
-  /* =======================================================
-     ABRIR AUTH
-  ======================================================= */
-
-  function openAuth(
-    view = "login"
-  ) {
-
-    if (!authModal) return;
-
-
-    authModal.classList.add(
-      "open"
-    );
-
-
-    authModal.setAttribute(
-      "aria-hidden",
-      "false"
-    );
-
-
-    document.body.classList.add(
-      "modal-open"
-    );
-
-
-    showAuthView(view);
-
-  }
-
-
-  /* =======================================================
-     CERRAR AUTH
-  ======================================================= */
-
-  function closeAuth() {
-
-    if (!authModal) return;
-
-
-    authModal.classList.remove(
-      "open"
-    );
-
-
-    authModal.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-
-    if (
-      !cartModal ||
-      !cartModal.classList.contains(
-        "open"
-      )
-    ) {
-
-      document.body.classList.remove(
-        "modal-open"
-      );
-
-    }
-
-  }
-
-
-  /* =======================================================
-     CAMBIAR LOGIN / REGISTRO
-  ======================================================= */
-
-  function showAuthView(
-    view
-  ) {
-
-    if (
-      !loginView ||
-      !registerView
-    ) {
-      return;
-    }
-
-
-    loginView.classList.remove(
-      "active"
-    );
-
-    registerView.classList.remove(
-      "active"
-    );
-
-
-    if (
-      view === "register"
-    ) {
-
-      registerView.classList.add(
-        "active"
-      );
-
-    } else {
-
-      loginView.classList.add(
-        "active"
-      );
-
-    }
-
-
-    clearAuthMessages();
-
-  }
-
-
-  /* =======================================================
-     LIMPIAR MENSAJES
-  ======================================================= */
-
-  function clearAuthMessages() {
-
-    if (loginMessage) {
-
-      loginMessage.textContent =
-        "";
-
-      loginMessage.className =
-        "auth-message";
-
-    }
-
-
-    if (registerMessage) {
-
-      registerMessage.textContent =
-        "";
-
-      registerMessage.className =
-        "auth-message";
-
-    }
-
-  }
-
-
-  /* =======================================================
-     EVENTOS AUTH
-  ======================================================= */
-
-  if (loginButton) {
-
-    loginButton.addEventListener(
-      "click",
-      () => openAuth("login")
-    );
-
-  }
-
-
-  if (mobileLoginButton) {
-
-    mobileLoginButton.addEventListener(
-      "click",
-      () => {
-
-        closeMobileMenu();
-
-        openAuth("login");
-
-      }
-    );
-
-  }
-
-
-  if (authClose) {
-
-    authClose.addEventListener(
-      "click",
-      closeAuth
-    );
-
-  }
-
-
-  if (authBackdrop) {
-
-    authBackdrop.addEventListener(
-      "click",
-      closeAuth
-    );
-
-  }
-
-
-  if (switchToRegister) {
-
-    switchToRegister.addEventListener(
-      "click",
-      () =>
-        showAuthView(
-          "register"
-        )
-    );
-
-  }
-
-
-  if (switchToLogin) {
-
-    switchToLogin.addEventListener(
-      "click",
-      () =>
-        showAuthView(
-          "login"
-        )
-    );
-
-  }
-
-
-  /* =======================================================
-     USUARIOS
-  ======================================================= */
-
-  function getUsers() {
-
-    try {
-
-      const users =
-        localStorage.getItem(
-          "caoticco_users"
-        );
-
-
-      return users
-        ? JSON.parse(users)
-        : [];
-
-    } catch {
-
-      return [];
-
-    }
-
-  }
-
-
-  function saveUsers(users) {
-
-    localStorage.setItem(
-      "caoticco_users",
-      JSON.stringify(users)
-    );
-
-  }
-
-
-  /* =======================================================
-     REGISTRO
-  ======================================================= */
-
-  if (registerForm) {
-
-    registerForm.addEventListener(
-      "submit",
-      (event) => {
-
-        event.preventDefault();
-
-
-        const name =
-          $("#register-name")
-            ?.value
-            .trim();
-
-
-        const email =
-          $("#register-email")
-            ?.value
-            .trim()
-            .toLowerCase();
-
-
-        const password =
-          $("#register-password")
-            ?.value;
-
-
-        const confirmPassword =
-          $("#register-password-confirm")
-            ?.value;
-
-
-        if (
-          !name ||
-          !email ||
-          !password ||
-          !confirmPassword
-        ) {
-
-          showRegisterMessage(
-            "Completa todos los campos.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if (
-          !isValidEmail(email)
-        ) {
-
-          showRegisterMessage(
-            "Introduce un correo válido.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if (
-          password.length < 6
-        ) {
-
-          showRegisterMessage(
-            "La contraseña debe tener mínimo 6 caracteres.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        if (
-          password !==
-          confirmPassword
-        ) {
-
-          showRegisterMessage(
-            "Las contraseñas no coinciden.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        const users =
-          getUsers();
-
-
-        const exists =
-          users.some(
-            (user) =>
-              user.email ===
-              email
-          );
-
-
-        if (exists) {
-
-          showRegisterMessage(
-            "Este correo ya está registrado.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        users.push({
-
-          id: Date.now(),
-
-          name,
-
-          email,
-
-          password,
-
-          createdAt:
-            new Date().toISOString()
+          message +=
+            `• ${item.name} x${item.quantity} — ${formatPrice(
+              item.price * item.quantity
+            )}%0A`;
 
         });
 
 
-        saveUsers(users);
-
-        registerForm.reset();
-
-
-        showRegisterMessage(
-          "Cuenta creada correctamente. Ahora puedes iniciar sesión.",
-          "success"
-        );
+        message +=
+          `%0ATotal: ${formatPrice(
+            getCartTotal()
+          )}`;
 
 
-        setTimeout(() => {
-
-          showAuthView("login");
-
-
-          const loginEmail =
-            $("#login-email");
+        const whatsappURL =
+          `https://wa.me/?text=${message}`;
 
 
-          if (loginEmail) {
-
-            loginEmail.value =
-              email;
-
-          }
-
-        }, 1200);
-
-      }
-    );
-
-  }
-
-
-  /* =======================================================
-     LOGIN
-  ======================================================= */
-
-  if (loginForm) {
-
-    loginForm.addEventListener(
-      "submit",
-      (event) => {
-
-        event.preventDefault();
-
-
-        const email =
-          $("#login-email")
-            ?.value
-            .trim()
-            .toLowerCase();
-
-
-        const password =
-          $("#login-password")
-            ?.value;
-
-
-        if (
-          !email ||
-          !password
-        ) {
-
-          showLoginMessage(
-            "Completa tu correo y contraseña.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        const users =
-          getUsers();
-
-
-        const user =
-          users.find(
-            (item) =>
-              item.email === email &&
-              item.password ===
-                password
-          );
-
-
-        if (!user) {
-
-          showLoginMessage(
-            "Correo o contraseña incorrectos.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        localStorage.setItem(
-          "caoticco_current_user",
-          JSON.stringify({
-            id: user.id,
-            name: user.name,
-            email: user.email
-          })
-        );
-
-
-        showLoginMessage(
-          `Bienvenido, ${user.name}.`,
-          "success"
-        );
-
-
-        updateUserInterface();
-
-
-        setTimeout(
-          closeAuth,
-          900
+        window.open(
+          whatsappURL,
+          "_blank"
         );
 
       }
@@ -1521,516 +806,47 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  /* =======================================================
-     MENSAJES AUTH
-  ======================================================= */
+  /* =========================================================
+     AUTH / LOGIN
+  ========================================================= */
 
-  function showLoginMessage(
-    message,
-    type = ""
-  ) {
+  const authModal =
+    $("#auth-modal");
 
-    if (!loginMessage) return;
+  const authOpen =
+    $("#auth-open");
 
-
-    loginMessage.textContent =
-      message;
+  const authClose =
+    $("#auth-close");
 
 
-    loginMessage.className =
-      `auth-message ${type}`;
+  if (authOpen && authModal) {
 
-  }
+    authOpen.addEventListener(
+      "click",
+      () => {
 
+        authModal.classList.add("active");
 
-  function showRegisterMessage(
-    message,
-    type = ""
-  ) {
-
-    if (!registerMessage) return;
-
-
-    registerMessage.textContent =
-      message;
-
-
-    registerMessage.className =
-      `auth-message ${type}`;
-
-  }
-
-
-  /* =======================================================
-     PASSWORD TOGGLE
-  ======================================================= */
-
-  $$(".password-toggle")
-    .forEach((button) => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          const inputId =
-            button.dataset.target;
-
-
-          const input =
-            document.getElementById(
-              inputId
-            );
-
-
-          if (!input) return;
-
-
-          const isPassword =
-            input.type ===
-            "password";
-
-
-          input.type =
-            isPassword
-              ? "text"
-              : "password";
-
-
-          const icon =
-            $("i", button);
-
-
-          if (icon) {
-
-            icon.setAttribute(
-              "data-lucide",
-              isPassword
-                ? "eye-off"
-                : "eye"
-            );
-
-
-            if (window.lucide) {
-              lucide.createIcons();
-            }
-
-          }
-
-        }
-      );
-
-    });
-
-
-  /* =======================================================
-     VALIDAR EMAIL
-  ======================================================= */
-
-  function isValidEmail(
-    email
-  ) {
-
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      .test(email);
-
-  }
-
-
-  /* =======================================================
-     USUARIO ACTUAL
-  ======================================================= */
-
-  function getCurrentUser() {
-
-    try {
-
-      const user =
-        localStorage.getItem(
-          "caoticco_current_user"
-        );
-
-
-      return user
-        ? JSON.parse(user)
-        : null;
-
-    } catch {
-
-      return null;
-
-    }
-
-  }
-
-
-  function logout() {
-
-    localStorage.removeItem(
-      "caoticco_current_user"
-    );
-
-
-    updateUserInterface();
-
-
-    showNotification(
-      "Sesión cerrada correctamente."
+      }
     );
 
   }
 
 
-  /* =======================================================
-     ACTUALIZAR USUARIO
-  ======================================================= */
+  if (authClose && authModal) {
 
-  function updateUserInterface() {
+    authClose.addEventListener(
+      "click",
+      () => {
 
-    const user =
-      getCurrentUser();
-
-
-    const loginButton =
-      $("#login-button");
-
-
-    const mobileLoginButton =
-      $("#mobile-login-button");
-
-
-    if (user) {
-
-      if (loginButton) {
-
-        loginButton.innerHTML = `
-
-          <i
-            data-lucide="user-round"
-            width="16"
-            height="16">
-          </i>
-
-          <span class="login-text">
-            ${escapeHTML(user.name)}
-          </span>
-
-        `;
-
-
-        loginButton.onclick =
-          () => {
-
-            const confirmLogout =
-              window.confirm(
-                "¿Quieres cerrar sesión?"
-              );
-
-
-            if (
-              confirmLogout
-            ) {
-
-              logout();
-
-            }
-
-          };
-
-
-        loginButton.setAttribute(
-          "aria-label",
-          "Cerrar sesión"
-        );
+        authModal.classList.remove("active");
 
       }
-
-
-      if (
-        mobileLoginButton
-      ) {
-
-        mobileLoginButton.textContent =
-          `Cerrar sesión (${user.name})`;
-
-
-        mobileLoginButton.onclick =
-          () => {
-
-            closeMobileMenu();
-
-
-            const confirmLogout =
-              window.confirm(
-                "¿Quieres cerrar sesión?"
-              );
-
-
-            if (
-              confirmLogout
-            ) {
-
-              logout();
-
-            }
-
-          };
-
-      }
-
-    } else {
-
-      if (loginButton) {
-
-        loginButton.innerHTML = `
-
-          <i
-            data-lucide="user-round"
-            width="16"
-            height="16">
-          </i>
-
-          <span class="login-text">
-            Iniciar sesión
-          </span>
-
-        `;
-
-
-        loginButton.onclick =
-          () => openAuth("login");
-
-
-        loginButton.setAttribute(
-          "aria-label",
-          "Iniciar sesión"
-        );
-
-      }
-
-
-      if (
-        mobileLoginButton
-      ) {
-
-        mobileLoginButton.textContent =
-          "Iniciar sesión";
-
-
-        mobileLoginButton.onclick =
-          () => {
-
-            closeMobileMenu();
-
-            openAuth("login");
-
-          };
-
-      }
-
-    }
-
-
-    if (window.lucide) {
-      lucide.createIcons();
-    }
-
-  }
-
-
-  /* =======================================================
-     ESCAPE HTML
-  ======================================================= */
-
-  function escapeHTML(value) {
-
-    const div =
-      document.createElement(
-        "div"
-      );
-
-
-    div.textContent =
-      String(value);
-
-
-    return div.innerHTML;
-
-  }
-
-
-  /* =======================================================
-     NOTIFICACIONES
-  ======================================================= */
-
-  function showNotification(
-    message
-  ) {
-
-    let notification =
-      $("#caoticco-notification");
-
-
-    if (!notification) {
-
-      notification =
-        document.createElement(
-          "div"
-        );
-
-
-      notification.id =
-        "caoticco-notification";
-
-
-      notification.style.position =
-        "fixed";
-
-      notification.style.left =
-        "50%";
-
-      notification.style.bottom =
-        "25px";
-
-      notification.style.zIndex =
-        "10000";
-
-      notification.style.transform =
-        "translate(-50%, 120px)";
-
-      notification.style.padding =
-        "0.9rem 1.25rem";
-
-      notification.style.background =
-        "#761d22";
-
-      notification.style.color =
-        "#fff";
-
-      notification.style.border =
-        "1px solid #a42b31";
-
-      notification.style.fontFamily =
-        '"Work Sans", sans-serif';
-
-      notification.style.fontSize =
-        "0.75rem";
-
-      notification.style.fontWeight =
-        "700";
-
-      notification.style.textAlign =
-        "center";
-
-      notification.style.boxShadow =
-        "0 15px 40px rgba(0,0,0,.45)";
-
-      notification.style.transition =
-        "transform .3s ease, opacity .3s ease";
-
-      notification.style.opacity =
-        "0";
-
-
-      document.body.appendChild(
-        notification
-      );
-
-    }
-
-
-    notification.textContent =
-      message;
-
-
-    notification.style.opacity =
-      "1";
-
-
-    notification.style.transform =
-      "translate(-50%, 0)";
-
-
-    clearTimeout(
-      notification._timeout
     );
 
-
-    notification._timeout =
-      setTimeout(() => {
-
-        notification.style.opacity =
-          "0";
-
-        notification.style.transform =
-          "translate(-50%, 120px)";
-
-      }, 2800);
-
   }
 
-
-  /* =======================================================
-     ESC
-  ======================================================= */
-
-  document.addEventListener(
-    "keydown",
-    (event) => {
-
-      if (
-        event.key !==
-        "Escape"
-      ) {
-        return;
-      }
-
-
-      if (
-        authModal &&
-        authModal.classList.contains(
-          "open"
-        )
-      ) {
-
-        closeAuth();
-
-        return;
-
-      }
-
-
-      if (
-        cartModal &&
-        cartModal.classList.contains(
-          "open"
-        )
-      ) {
-
-        closeCart();
-
-        return;
-
-      }
-
-
-      if (
-        mobileMenu &&
-        mobileMenu.classList.contains(
-          "open"
-        )
-      ) {
-
-        closeMobileMenu();
-
-      }
-
-    }
-  );
-
-
-  /* =======================================================
-     CERRAR MODAL AUTH
-  ======================================================= */
 
   if (authModal) {
 
@@ -2038,12 +854,9 @@ document.addEventListener("DOMContentLoaded", () => {
       "click",
       (event) => {
 
-        if (
-          event.target ===
-          authModal
-        ) {
+        if (event.target === authModal) {
 
-          closeAuth();
+          authModal.classList.remove("active");
 
         }
 
@@ -2053,398 +866,46 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  /* =======================================================
-     NAVEGACIÓN SUAVE
-  ======================================================= */
-
-  $$('a[href^="#"]')
-    .forEach((link) => {
-
-      link.addEventListener(
-        "click",
-        (event) => {
-
-          const href =
-            link.getAttribute(
-              "href"
-            );
-
-
-          if (
-            !href ||
-            href === "#"
-          ) {
-            return;
-          }
-
-
-          const target =
-            document.querySelector(
-              href
-            );
-
-
-          if (!target) {
-            return;
-          }
-
-
-          event.preventDefault();
-
-
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-
-        }
-      );
-
-    });
-
-
-  /* =======================================================
-     PRODUCTOS DINÁMICOS
-  ======================================================= */
-
-  const productsContainer =
-    $("#products-container");
-
-
-  if (productsContainer) {
-
-    renderProducts();
-
-  }
-
-
-  function renderProducts() {
-
-    if (!productsContainer) {
-      return;
-    }
-
-
-    productsContainer.innerHTML =
-      products
-        .map(
-          (product, index) => {
-
-            /*
-              Producto 3 utiliza sus fotografías.
-            */
-
-            if (product.id === 3) {
-
-              return `
-
-                <article
-                  class="product-card reveal in-view"
-                  data-product-id="3"
-                  data-product-name="TOTE BAG BASIC"
-                  data-product-price="50000"
-                >
-
-                  <div class="product-image">
-
-                    <span class="product-number">
-                      03
-                    </span>
-
-                    <img
-                      id="product-image-3"
-                      src="logo.jpeg"
-                      alt="Tote Bag Basic"
-                      class="clickable-product-image"
-                    >
-
-                  </div>
-
-
-                  <div class="product-info">
-
-                    <h3 class="display product-name">
-                      TOTE BAG BASIC
-                    </h3>
-
-
-                    <p class="product-description">
-                      Una pieza esencial elevada por un diseño exclusivo y acabados premium.
-                    </p>
-
-
-                    <div class="product-bottom">
-
-                      <strong class="product-price">
-                        $50.000
-                      </strong>
-
-
-                      <button
-                        type="button"
-                        class="product-add"
-                        data-add-cart="3"
-                      >
-
-                        <i
-                          data-lucide="plus"
-                          width="17">
-                        </i>
-
-                        Añadir
-
-                      </button>
-
-                    </div>
-
-                  </div>
-
-                </article>
-
-              `;
-
-            }
-
-
-            return `
-
-              <article
-                class="product-card reveal in-view"
-                data-product-id="${product.id}"
-              >
-
-                <div class="product-image">
-
-                  <span class="product-number">
-                    ${String(index + 1).padStart(2, "0")}
-                  </span>
-
-                  <i
-                    data-lucide="${product.icon}"
-                    width="85"
-                    height="85">
-                  </i>
-
-                </div>
-
-
-                <div class="product-info">
-
-                  <h3 class="product-name display">
-                    ${escapeHTML(product.name)}
-                  </h3>
-
-
-                  <p class="product-description">
-                    ${escapeHTML(product.description)}
-                  </p>
-
-
-                  <div class="product-bottom">
-
-                    <strong class="product-price">
-                      ${formatPrice(product.price)}
-                    </strong>
-
-
-                    <button
-                      type="button"
-                      class="product-add"
-                      data-add-cart="${product.id}"
-                    >
-
-                      <i
-                        data-lucide="plus"
-                        width="15"
-                        height="15">
-                      </i>
-
-                      Añadir
-
-                    </button>
-
-                  </div>
-
-                </div>
-
-              </article>
-
-            `;
-
-          }
-        )
-        .join("");
-
-
-    /*
-      Volvemos a activar el clic
-      después de crear las tarjetas.
-    */
-
-    setupProductImage3();
-
-
-    /*
-      Botones añadir al carrito.
-    */
-
-    $$(".product-add", productsContainer)
-      .forEach((button) => {
-
-        button.addEventListener(
-          "click",
-          (event) => {
-
-            event.stopPropagation();
-
-
-            const id =
-              Number(
-                button.dataset.addCart
-              );
-
-
-            if (
-              !Number.isNaN(id)
-            ) {
-
-              addToCart(id);
-
-            }
-
-          }
-        );
-
-      });
-
-
-    if (window.lucide) {
-      lucide.createIcons();
-    }
-
-  }
-
-
-  /* =======================================================
-     CLIC FUERA DEL MENÚ
-  ======================================================= */
+  /* =========================================================
+     CERRAR MODALES CON ESC
+  ========================================================= */
 
   document.addEventListener(
-    "click",
+    "keydown",
     (event) => {
 
-      if (
-        !mobileMenu ||
-        !menuToggle
-      ) {
-        return;
-      }
+      if (event.key === "Escape") {
 
+        closeCart();
 
-      const clickedInsideMenu =
-        mobileMenu.contains(
-          event.target
-        );
+        if (authModal) {
+          authModal.classList.remove("active");
+        }
 
-
-      const clickedToggle =
-        menuToggle.contains(
-          event.target
-        );
-
-
-      if (
-        mobileMenu.classList.contains(
-          "open"
-        ) &&
-        !clickedInsideMenu &&
-        !clickedToggle
-      ) {
-
-        closeMobileMenu();
-
-      }
-
-    }
-  );
-
-
-  /* =======================================================
-     STORAGE
-  ======================================================= */
-
-  window.addEventListener(
-    "storage",
-    (event) => {
-
-      if (
-        event.key ===
-        "caoticco_cart"
-      ) {
-
-        try {
-
-          cart =
-            event.newValue
-              ? JSON.parse(
-                  event.newValue
-                )
-              : [];
-
-
-          renderCart();
-
-        } catch {
-
-          cart = [];
-
+        if (mobileMenu) {
+          mobileMenu.classList.remove("active");
+          document.body.classList.remove("menu-open");
         }
 
       }
 
-
-      if (
-        event.key ===
-        "caoticco_current_user"
-      ) {
-
-        updateUserInterface();
-
-      }
-
     }
   );
 
 
-  /* =======================================================
-     INICIO
-  ======================================================= */
-
-  updateCartCount();
+  /* =========================================================
+     INICIALIZAR CARRITO
+  ========================================================= */
 
   renderCart();
 
-  updateUserInterface();
 
+  /* =========================================================
+     LUCIDE
+  ========================================================= */
 
-  console.log(
-    "%cCAOTICCO",
-    `
-      color:#a42b31;
-      font-size:30px;
-      font-weight:900;
-      font-family:Arial;
-    `
-  );
-
-
-  console.log(
-    "%cCultura en movimiento.",
-    `
-      color:#f4f0eb;
-      font-size:14px;
-      font-family:Arial;
-    `
-  );
+  if (window.lucide) {
+    lucide.createIcons();
+  }
 
 });
