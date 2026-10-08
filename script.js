@@ -1979,7 +1979,30 @@ document.addEventListener("DOMContentLoaded", () => {
           "Abrir menú de navegación"
         );
       }
+const productImages = {
+  3: [
+    "logo.jpeg",
+    "logo2.jpeg",
+    "logo3.jpeg"
+  ]
+};
 
+const productIndexes = {
+  3: 0
+};
+
+function changeProductImage(productId) {
+  const images = productImages[productId];
+
+  productIndexes[productId]++;
+
+  if (productIndexes[productId] >= images.length) {
+    productIndexes[productId] = 0;
+  }
+
+  document.getElementById("product-image-" + productId).src =
+    images[productIndexes[productId]];
+}
     },
     { passive: true }
   );
