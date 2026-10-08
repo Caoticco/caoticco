@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =======================================================
      ALTURA REAL DEL VIEWPORT
-     Soluciona problemas de 100vh en móviles
   ======================================================= */
 
   function updateViewportHeight() {
@@ -49,12 +48,23 @@ document.addEventListener("DOMContentLoaded", () => {
   let resizeTimeout;
 
   window.addEventListener("resize", () => {
+
     clearTimeout(resizeTimeout);
 
     resizeTimeout = setTimeout(() => {
       updateViewportHeight();
     }, 100);
+
   });
+
+
+  window.addEventListener(
+    "orientationchange",
+    () => {
+      setTimeout(updateViewportHeight, 150);
+    },
+    { passive: true }
+  );
 
 
   /* =======================================================
@@ -64,7 +74,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = $("#menu-toggle");
   const mobileMenu = $("#mobile-menu");
 
+  function updateMenuIcon(isOpen) {
+
+    if (!menuToggle) return;
+
+    const icon = $("i", menuToggle);
+
+    if (!icon) return;
+
+    icon.setAttribute(
+      "data-lucide",
+      isOpen ? "x" : "menu"
+    );
+
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  }
+
+
   function closeMobileMenu() {
+
     if (!mobileMenu || !menuToggle) return;
 
     mobileMenu.classList.remove("open");
@@ -82,22 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateMenuIcon(false);
   }
 
-  function updateMenuIcon(isOpen) {
-    if (!menuToggle) return;
-
-    const icon = $("i", menuToggle);
-
-    if (!icon) return;
-
-    icon.setAttribute(
-      "data-lucide",
-      isOpen ? "x" : "menu"
-    );
-
-    if (window.lucide) {
-      lucide.createIcons();
-    }
-  }
 
   if (menuToggle && mobileMenu) {
 
@@ -119,7 +133,9 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       updateMenuIcon(isOpen);
+
     });
+
 
     $$("#mobile-menu a").forEach((link) => {
 
@@ -129,6 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+
     window.addEventListener("resize", () => {
 
       if (window.innerWidth >= 1024) {
@@ -136,6 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
     });
+
   }
 
 
@@ -154,18 +172,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (entry.isIntersecting) {
 
-            entry.target.classList.add("in-view");
+            entry.target.classList.add(
+              "in-view"
+            );
 
-            observer.unobserve(entry.target);
+            observer.unobserve(
+              entry.target
+            );
+
           }
 
         });
 
       },
       {
-        threshold: 0.12
+        threshold: 0.12,
+        rootMargin: "0px 0px -40px 0px"
       }
     );
+
 
     revealElements.forEach((element) => {
       observer.observe(element);
@@ -185,6 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ======================================================= */
 
   const products = [
+
     {
       id: 1,
       name: "CAOTICCO TEE",
@@ -208,7 +234,74 @@ document.addEventListener("DOMContentLoaded", () => {
       description: "Gorra clásica con identidad CAOTICCO.",
       icon: "hat"
     }
+
   ];
+
+
+  /* =======================================================
+     FOTOS PRODUCTO 3
+  ======================================================= */
+
+  const productImages3 = [
+    "logo.jpeg",
+    "lince.png",
+    "inicio.jpeg"
+  ];
+
+  let currentImage3 = 0;
+
+
+  function setupProductImage3() {
+
+    const productImage3 =
+      document.getElementById(
+        "product-image-3"
+      );
+
+    if (!productImage3) {
+      return;
+    }
+
+
+    productImage3.style.cursor =
+      "pointer";
+
+
+    productImage3.addEventListener(
+      "click",
+      (event) => {
+
+        /*
+          Evita que el clic de la imagen
+          active otros eventos del producto.
+        */
+
+        event.stopPropagation();
+
+
+        currentImage3++;
+
+
+        if (
+          currentImage3 >=
+          productImages3.length
+        ) {
+
+          currentImage3 = 0;
+
+        }
+
+
+        productImage3.src =
+          productImages3[currentImage3];
+
+      }
+    );
+
+  }
+
+
+  setupProductImage3();
 
 
   /* =======================================================
@@ -217,10 +310,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let cart = [];
 
+
   try {
 
     const savedCart =
-      localStorage.getItem("caoticco_cart");
+      localStorage.getItem(
+        "caoticco_cart"
+      );
 
     if (savedCart) {
       cart = JSON.parse(savedCart);
@@ -234,6 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     cart = [];
+
   }
 
 
@@ -254,13 +351,15 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
     }
+
   }
 
 
   function getCartQuantity() {
 
     return cart.reduce(
-      (total, item) => total + item.quantity,
+      (total, item) =>
+        total + item.quantity,
       0
     );
 
@@ -271,7 +370,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return cart.reduce(
       (total, item) =>
-        total + item.price * item.quantity,
+        total +
+        item.price *
+        item.quantity,
       0
     );
 
@@ -282,15 +383,32 @@ document.addEventListener("DOMContentLoaded", () => {
      ELEMENTOS DEL CARRITO
   ======================================================= */
 
-  const cartButton = $("#cart-button");
-  const cartModal = $("#cart-modal");
-  const cartPanel = $(".cart-panel", cartModal || document);
-  const cartItems = $("#cart-items");
-  const cartCount = $("#cart-count");
-  const cartTotal = $("#cart-total");
-  const cartClose = $("#cart-close");
-  const cartBackdrop = $(".cart-backdrop");
-  const checkoutButton = $("#checkout-button");
+  const cartButton =
+    $("#cart-button");
+
+  const cartModal =
+    $("#cart-modal");
+
+  const cartPanel =
+    $(".cart-panel", cartModal || document);
+
+  const cartItems =
+    $("#cart-items");
+
+  const cartCount =
+    $("#cart-count");
+
+  const cartTotal =
+    $("#cart-total");
+
+  const cartClose =
+    $("#cart-close");
+
+  const cartBackdrop =
+    $(".cart-backdrop");
+
+  const checkoutButton =
+    $("#checkout-button");
 
 
   /* =======================================================
@@ -301,15 +419,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!cartCount) return;
 
-    const quantity = getCartQuantity();
+    const quantity =
+      getCartQuantity();
 
-    cartCount.textContent = quantity;
+    cartCount.textContent =
+      quantity;
 
     if (quantity > 0) {
-      cartCount.classList.add("visible");
+
+      cartCount.classList.add(
+        "visible"
+      );
+
     } else {
-      cartCount.classList.remove("visible");
+
+      cartCount.classList.remove(
+        "visible"
+      );
+
     }
+
   }
 
 
@@ -328,20 +457,12 @@ document.addEventListener("DOMContentLoaded", () => {
       "false"
     );
 
-    document.body.classList.add("modal-open");
+    document.body.classList.add(
+      "modal-open"
+    );
 
     renderCart();
 
-    setTimeout(() => {
-
-      const firstButton =
-        $(".cart-close", cartModal);
-
-      if (firstButton) {
-        firstButton.focus();
-      }
-
-    }, 100);
   }
 
 
@@ -353,7 +474,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!cartModal) return;
 
-    cartModal.classList.remove("open");
+    cartModal.classList.remove(
+      "open"
+    );
 
     cartModal.setAttribute(
       "aria-hidden",
@@ -362,10 +485,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (
       !authModal ||
-      !authModal.classList.contains("open")
+      !authModal.classList.contains(
+        "open"
+      )
     ) {
-      document.body.classList.remove("modal-open");
+
+      document.body.classList.remove(
+        "modal-open"
+      );
+
     }
+
   }
 
 
@@ -379,13 +509,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateCartCount();
 
+
     if (cart.length === 0) {
 
       cartItems.innerHTML = `
+
         <div class="empty-cart">
-          <i data-lucide="shopping-bag"
-             width="42"
-             height="42"></i>
+
+          <i
+            data-lucide="shopping-bag"
+            width="42"
+            height="42">
+          </i>
 
           <p>
             Tu carrito está vacío.
@@ -394,25 +529,29 @@ document.addEventListener("DOMContentLoaded", () => {
           <button
             type="button"
             class="cta cta-wine"
-            id="continue-shopping"
-          >
+            id="continue-shopping">
             Explorar productos
           </button>
+
         </div>
+
       `;
+
 
       if (window.lucide) {
         lucide.createIcons();
       }
 
+
       const continueButton =
         $("#continue-shopping");
+
 
       if (continueButton) {
 
         continueButton.addEventListener(
           "click",
-          () => closeCart()
+          closeCart
         );
 
       }
@@ -421,21 +560,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
       cartItems.innerHTML = "";
 
+
       cart.forEach((item) => {
 
         const article =
-          document.createElement("article");
+          document.createElement(
+            "article"
+          );
 
-        article.className = "cart-item";
+        article.className =
+          "cart-item";
 
-        article.dataset.id = item.id;
+        article.dataset.id =
+          item.id;
+
 
         article.innerHTML = `
+
           <div class="cart-item-image">
-            <i data-lucide="${item.icon || "package"}"
-               width="30"
-               height="30"></i>
+
+            <i
+              data-lucide="${item.icon || "package"}"
+              width="30"
+              height="30">
+            </i>
+
           </div>
+
 
           <div class="cart-item-info">
 
@@ -447,124 +598,162 @@ document.addEventListener("DOMContentLoaded", () => {
               ${formatPrice(item.price)}
             </span>
 
+
             <div class="cart-item-controls">
 
               <button
                 type="button"
                 class="quantity-button decrease"
-                data-id="${item.id}"
-                aria-label="Disminuir cantidad"
-              >
+                data-id="${item.id}">
                 −
               </button>
+
 
               <span class="quantity-value">
                 ${item.quantity}
               </span>
 
+
               <button
                 type="button"
                 class="quantity-button increase"
-                data-id="${item.id}"
-                aria-label="Aumentar cantidad"
-              >
+                data-id="${item.id}">
                 +
               </button>
 
             </div>
 
+
             <button
               type="button"
               class="cart-remove"
-              data-id="${item.id}"
-            >
+              data-id="${item.id}">
               Eliminar
             </button>
 
           </div>
 
+
           <strong class="cart-item-total">
-            ${formatPrice(item.price * item.quantity)}
+
+            ${formatPrice(
+              item.price *
+              item.quantity
+            )}
+
           </strong>
+
         `;
 
-        cartItems.appendChild(article);
-      });
 
-      $$(".increase", cartItems).forEach((button) => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const id =
-              Number(button.dataset.id);
-
-            changeQuantity(id, 1);
-          }
+        cartItems.appendChild(
+          article
         );
 
       });
 
-      $$(".decrease", cartItems).forEach((button) => {
 
-        button.addEventListener(
-          "click",
-          () => {
+      $$(".increase", cartItems)
+        .forEach((button) => {
 
-            const id =
-              Number(button.dataset.id);
+          button.addEventListener(
+            "click",
+            () => {
 
-            changeQuantity(id, -1);
-          }
-        );
+              const id =
+                Number(
+                  button.dataset.id
+                );
 
-      });
+              changeQuantity(id, 1);
 
-      $$(".cart-remove", cartItems).forEach((button) => {
+            }
+          );
 
-        button.addEventListener(
-          "click",
-          () => {
+        });
 
-            const id =
-              Number(button.dataset.id);
 
-            removeFromCart(id);
-          }
-        );
+      $$(".decrease", cartItems)
+        .forEach((button) => {
 
-      });
+          button.addEventListener(
+            "click",
+            () => {
+
+              const id =
+                Number(
+                  button.dataset.id
+                );
+
+              changeQuantity(id, -1);
+
+            }
+          );
+
+        });
+
+
+      $$(".cart-remove", cartItems)
+        .forEach((button) => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              const id =
+                Number(
+                  button.dataset.id
+                );
+
+              removeFromCart(id);
+
+            }
+          );
+
+        });
+
 
       if (window.lucide) {
         lucide.createIcons();
       }
+
     }
 
+
     if (cartTotal) {
+
       cartTotal.textContent =
-        formatPrice(getCartTotal());
+        formatPrice(
+          getCartTotal()
+        );
+
     }
+
   }
 
 
   /* =======================================================
-     AÑADIR PRODUCTO
+     AÑADIR AL CARRITO
   ======================================================= */
 
   function addToCart(productId) {
 
     const product =
       products.find(
-        (item) => item.id === productId
+        (item) =>
+          item.id === productId
       );
+
 
     if (!product) return;
 
+
     const existing =
       cart.find(
-        (item) => item.id === productId
+        (item) =>
+          item.id === productId
       );
+
 
     if (existing) {
 
@@ -579,12 +768,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+
     saveCart();
+
     renderCart();
+
 
     showNotification(
       `${product.name} añadido al carrito`
     );
+
   }
 
 
@@ -592,7 +785,10 @@ document.addEventListener("DOMContentLoaded", () => {
      CAMBIAR CANTIDAD
   ======================================================= */
 
-  function changeQuantity(productId, amount) {
+  function changeQuantity(
+    productId,
+    amount
+  ) {
 
     const item =
       cart.find(
@@ -600,9 +796,12 @@ document.addEventListener("DOMContentLoaded", () => {
           product.id === productId
       );
 
+
     if (!item) return;
 
+
     item.quantity += amount;
+
 
     if (item.quantity <= 0) {
 
@@ -611,10 +810,14 @@ document.addEventListener("DOMContentLoaded", () => {
           (product) =>
             product.id !== productId
         );
+
     }
 
+
     saveCart();
+
     renderCart();
+
   }
 
 
@@ -622,7 +825,9 @@ document.addEventListener("DOMContentLoaded", () => {
      ELIMINAR PRODUCTO
   ======================================================= */
 
-  function removeFromCart(productId) {
+  function removeFromCart(
+    productId
+  ) {
 
     cart =
       cart.filter(
@@ -630,32 +835,61 @@ document.addEventListener("DOMContentLoaded", () => {
           item.id !== productId
       );
 
+
     saveCart();
+
     renderCart();
+
   }
 
 
   /* =======================================================
-     BOTONES "AÑADIR AL CARRITO"
+     BOTONES AÑADIR
   ======================================================= */
 
-  $$("[data-product-id]").forEach((button) => {
+  $$("[data-product-id]")
+    .forEach((button) => {
 
-    button.addEventListener(
-      "click",
-      () => {
+      button.addEventListener(
+        "click",
+        (event) => {
 
-        const productId =
-          Number(button.dataset.productId);
+          /*
+            Si es la imagen del producto,
+            no añadir al carrito.
+          */
 
-        if (!Number.isNaN(productId)) {
-          addToCart(productId);
+          if (
+            event.target.closest(
+              "#product-image-3"
+            )
+          ) {
+            return;
+          }
+
+
+          const productId =
+            Number(
+              button.dataset.productId
+            );
+
+
+          if (
+            !Number.isNaN(
+              productId
+            )
+          ) {
+
+            addToCart(
+              productId
+            );
+
+          }
+
         }
+      );
 
-      }
-    );
-
-  });
+    });
 
 
   /* =======================================================
@@ -671,6 +905,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
+
   if (cartClose) {
 
     cartClose.addEventListener(
@@ -680,6 +915,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
+
   if (cartBackdrop) {
 
     cartBackdrop.addEventListener(
@@ -688,6 +924,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
   }
+
 
   if (checkoutButton) {
 
@@ -702,7 +939,9 @@ document.addEventListener("DOMContentLoaded", () => {
           );
 
           return;
+
         }
+
 
         showNotification(
           "El checkout estará disponible próximamente."
@@ -718,18 +957,32 @@ document.addEventListener("DOMContentLoaded", () => {
      LOGIN / REGISTRO
   ======================================================= */
 
-  const authModal = $("#auth-modal");
-  const authClose = $("#auth-close");
-  const authBackdrop = $(".auth-backdrop");
+  const authModal =
+    $("#auth-modal");
 
-  const loginView = $("#login-view");
-  const registerView = $("#register-view");
+  const authClose =
+    $("#auth-close");
 
-  const loginForm = $("#login-form");
-  const registerForm = $("#register-form");
+  const authBackdrop =
+    $(".auth-backdrop");
 
-  const loginMessage = $("#login-message");
-  const registerMessage = $("#register-message");
+  const loginView =
+    $("#login-view");
+
+  const registerView =
+    $("#register-view");
+
+  const loginForm =
+    $("#login-form");
+
+  const registerForm =
+    $("#register-form");
+
+  const loginMessage =
+    $("#login-message");
+
+  const registerMessage =
+    $("#register-message");
 
   const loginButton =
     $("#login-button");
@@ -745,60 +998,70 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =======================================================
-     ABRIR LOGIN
+     ABRIR AUTH
   ======================================================= */
 
-  function openAuth(view = "login") {
+  function openAuth(
+    view = "login"
+  ) {
 
     if (!authModal) return;
 
-    authModal.classList.add("open");
+
+    authModal.classList.add(
+      "open"
+    );
+
 
     authModal.setAttribute(
       "aria-hidden",
       "false"
     );
 
-    document.body.classList.add("modal-open");
+
+    document.body.classList.add(
+      "modal-open"
+    );
+
 
     showAuthView(view);
 
-    setTimeout(() => {
-
-      const input =
-        view === "login"
-          ? $("#login-email")
-          : $("#register-name");
-
-      if (input) {
-        input.focus();
-      }
-
-    }, 150);
   }
 
 
   /* =======================================================
-     CERRAR LOGIN
+     CERRAR AUTH
   ======================================================= */
 
   function closeAuth() {
 
     if (!authModal) return;
 
-    authModal.classList.remove("open");
+
+    authModal.classList.remove(
+      "open"
+    );
+
 
     authModal.setAttribute(
       "aria-hidden",
       "true"
     );
 
+
     if (
       !cartModal ||
-      !cartModal.classList.contains("open")
+      !cartModal.classList.contains(
+        "open"
+      )
     ) {
-      document.body.classList.remove("modal-open");
+
+      document.body.classList.remove(
+        "modal-open"
+      );
+
     }
+
   }
 
 
@@ -806,23 +1069,46 @@ document.addEventListener("DOMContentLoaded", () => {
      CAMBIAR LOGIN / REGISTRO
   ======================================================= */
 
-  function showAuthView(view) {
+  function showAuthView(
+    view
+  ) {
 
-    if (!loginView || !registerView) return;
+    if (
+      !loginView ||
+      !registerView
+    ) {
+      return;
+    }
 
-    loginView.classList.remove("active");
-    registerView.classList.remove("active");
 
-    if (view === "register") {
+    loginView.classList.remove(
+      "active"
+    );
 
-      registerView.classList.add("active");
+    registerView.classList.remove(
+      "active"
+    );
+
+
+    if (
+      view === "register"
+    ) {
+
+      registerView.classList.add(
+        "active"
+      );
 
     } else {
 
-      loginView.classList.add("active");
+      loginView.classList.add(
+        "active"
+      );
+
     }
 
+
     clearAuthMessages();
+
   }
 
 
@@ -833,14 +1119,26 @@ document.addEventListener("DOMContentLoaded", () => {
   function clearAuthMessages() {
 
     if (loginMessage) {
-      loginMessage.textContent = "";
-      loginMessage.className = "auth-message";
+
+      loginMessage.textContent =
+        "";
+
+      loginMessage.className =
+        "auth-message";
+
     }
 
+
     if (registerMessage) {
-      registerMessage.textContent = "";
-      registerMessage.className = "auth-message";
+
+      registerMessage.textContent =
+        "";
+
+      registerMessage.className =
+        "auth-message";
+
     }
+
   }
 
 
@@ -857,6 +1155,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
+
   if (mobileLoginButton) {
 
     mobileLoginButton.addEventListener(
@@ -866,10 +1165,12 @@ document.addEventListener("DOMContentLoaded", () => {
         closeMobileMenu();
 
         openAuth("login");
+
       }
     );
 
   }
+
 
   if (authClose) {
 
@@ -880,6 +1181,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
+
   if (authBackdrop) {
 
     authBackdrop.addEventListener(
@@ -889,27 +1191,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
+
   if (switchToRegister) {
 
     switchToRegister.addEventListener(
       "click",
-      () => showAuthView("register")
+      () =>
+        showAuthView(
+          "register"
+        )
     );
 
   }
+
 
   if (switchToLogin) {
 
     switchToLogin.addEventListener(
       "click",
-      () => showAuthView("login")
+      () =>
+        showAuthView(
+          "login"
+        )
     );
 
   }
 
 
   /* =======================================================
-     REGISTRO LOCAL
+     USUARIOS
   ======================================================= */
 
   function getUsers() {
@@ -921,19 +1231,17 @@ document.addEventListener("DOMContentLoaded", () => {
           "caoticco_users"
         );
 
+
       return users
         ? JSON.parse(users)
         : [];
 
-    } catch (error) {
-
-      console.warn(
-        "No se pudieron recuperar los usuarios.",
-        error
-      );
+    } catch {
 
       return [];
+
     }
+
   }
 
 
@@ -943,11 +1251,12 @@ document.addEventListener("DOMContentLoaded", () => {
       "caoticco_users",
       JSON.stringify(users)
     );
+
   }
 
 
   /* =======================================================
-     FORMULARIO REGISTRO
+     REGISTRO
   ======================================================= */
 
   if (registerForm) {
@@ -958,19 +1267,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
         event.preventDefault();
 
+
         const name =
-          $("#register-name")?.value.trim();
+          $("#register-name")
+            ?.value
+            .trim();
+
 
         const email =
-          $("#register-email")?.value
+          $("#register-email")
+            ?.value
             .trim()
             .toLowerCase();
 
+
         const password =
-          $("#register-password")?.value;
+          $("#register-password")
+            ?.value;
+
 
         const confirmPassword =
-          $("#register-password-confirm")?.value;
+          $("#register-password-confirm")
+            ?.value;
+
 
         if (
           !name ||
@@ -985,9 +1304,13 @@ document.addEventListener("DOMContentLoaded", () => {
           );
 
           return;
+
         }
 
-        if (!isValidEmail(email)) {
+
+        if (
+          !isValidEmail(email)
+        ) {
 
           showRegisterMessage(
             "Introduce un correo válido.",
@@ -995,9 +1318,13 @@ document.addEventListener("DOMContentLoaded", () => {
           );
 
           return;
+
         }
 
-        if (password.length < 6) {
+
+        if (
+          password.length < 6
+        ) {
 
           showRegisterMessage(
             "La contraseña debe tener mínimo 6 caracteres.",
@@ -1005,9 +1332,14 @@ document.addEventListener("DOMContentLoaded", () => {
           );
 
           return;
+
         }
 
-        if (password !== confirmPassword) {
+
+        if (
+          password !==
+          confirmPassword
+        ) {
 
           showRegisterMessage(
             "Las contraseñas no coinciden.",
@@ -1015,15 +1347,21 @@ document.addEventListener("DOMContentLoaded", () => {
           );
 
           return;
+
         }
 
-        const users = getUsers();
+
+        const users =
+          getUsers();
+
 
         const exists =
           users.some(
             (user) =>
-              user.email === email
+              user.email ===
+              email
           );
+
 
         if (exists) {
 
@@ -1033,48 +1371,63 @@ document.addEventListener("DOMContentLoaded", () => {
           );
 
           return;
+
         }
 
-        const newUser = {
+
+        users.push({
+
           id: Date.now(),
+
           name,
+
           email,
+
           password,
+
           createdAt:
             new Date().toISOString()
-        };
 
-        users.push(newUser);
+        });
+
 
         saveUsers(users);
 
         registerForm.reset();
+
 
         showRegisterMessage(
           "Cuenta creada correctamente. Ahora puedes iniciar sesión.",
           "success"
         );
 
+
         setTimeout(() => {
 
           showAuthView("login");
 
+
           const loginEmail =
             $("#login-email");
 
+
           if (loginEmail) {
-            loginEmail.value = email;
+
+            loginEmail.value =
+              email;
+
           }
 
         }, 1200);
 
       }
     );
+
   }
 
 
   /* =======================================================
-     FORMULARIO LOGIN
+     LOGIN
   ======================================================= */
 
   if (loginForm) {
@@ -1085,15 +1438,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
         event.preventDefault();
 
+
         const email =
-          $("#login-email")?.value
+          $("#login-email")
+            ?.value
             .trim()
             .toLowerCase();
 
-        const password =
-          $("#login-password")?.value;
 
-        if (!email || !password) {
+        const password =
+          $("#login-password")
+            ?.value;
+
+
+        if (
+          !email ||
+          !password
+        ) {
 
           showLoginMessage(
             "Completa tu correo y contraseña.",
@@ -1101,16 +1462,22 @@ document.addEventListener("DOMContentLoaded", () => {
           );
 
           return;
+
         }
 
-        const users = getUsers();
+
+        const users =
+          getUsers();
+
 
         const user =
           users.find(
             (item) =>
               item.email === email &&
-              item.password === password
+              item.password ===
+                password
           );
+
 
         if (!user) {
 
@@ -1120,7 +1487,9 @@ document.addEventListener("DOMContentLoaded", () => {
           );
 
           return;
+
         }
+
 
         localStorage.setItem(
           "caoticco_current_user",
@@ -1131,19 +1500,24 @@ document.addEventListener("DOMContentLoaded", () => {
           })
         );
 
+
         showLoginMessage(
           `Bienvenido, ${user.name}.`,
           "success"
         );
 
+
         updateUserInterface();
 
-        setTimeout(() => {
-          closeAuth();
-        }, 900);
+
+        setTimeout(
+          closeAuth,
+          900
+        );
 
       }
     );
+
   }
 
 
@@ -1158,11 +1532,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!loginMessage) return;
 
+
     loginMessage.textContent =
       message;
 
+
     loginMessage.className =
       `auth-message ${type}`;
+
   }
 
 
@@ -1173,20 +1550,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!registerMessage) return;
 
+
     registerMessage.textContent =
       message;
 
+
     registerMessage.className =
       `auth-message ${type}`;
+
   }
 
 
   /* =======================================================
-     MOSTRAR / OCULTAR CONTRASEÑA
+     PASSWORD TOGGLE
   ======================================================= */
 
-  $$(".password-toggle").forEach(
-    (button) => {
+  $$(".password-toggle")
+    .forEach((button) => {
 
       button.addEventListener(
         "click",
@@ -1195,23 +1575,30 @@ document.addEventListener("DOMContentLoaded", () => {
           const inputId =
             button.dataset.target;
 
+
           const input =
             document.getElementById(
               inputId
             );
 
+
           if (!input) return;
 
+
           const isPassword =
-            input.type === "password";
+            input.type ===
+            "password";
+
 
           input.type =
             isPassword
               ? "text"
               : "password";
 
+
           const icon =
             $("i", button);
+
 
           if (icon) {
 
@@ -1222,23 +1609,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 : "eye"
             );
 
+
             if (window.lucide) {
               lucide.createIcons();
             }
+
           }
 
         }
       );
 
-    }
-  );
+    });
 
 
   /* =======================================================
      VALIDAR EMAIL
   ======================================================= */
 
-  function isValidEmail(email) {
+  function isValidEmail(
+    email
+  ) {
 
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       .test(email);
@@ -1259,13 +1649,17 @@ document.addEventListener("DOMContentLoaded", () => {
           "caoticco_current_user"
         );
 
+
       return user
         ? JSON.parse(user)
         : null;
 
     } catch {
+
       return null;
+
     }
+
   }
 
 
@@ -1275,16 +1669,19 @@ document.addEventListener("DOMContentLoaded", () => {
       "caoticco_current_user"
     );
 
+
     updateUserInterface();
+
 
     showNotification(
       "Sesión cerrada correctamente."
     );
+
   }
 
 
   /* =======================================================
-     ACTUALIZAR INTERFAZ DEL USUARIO
+     ACTUALIZAR USUARIO
   ======================================================= */
 
   function updateUserInterface() {
@@ -1292,74 +1689,92 @@ document.addEventListener("DOMContentLoaded", () => {
     const user =
       getCurrentUser();
 
+
     const loginButton =
       $("#login-button");
 
+
     const mobileLoginButton =
       $("#mobile-login-button");
+
 
     if (user) {
 
       if (loginButton) {
 
         loginButton.innerHTML = `
-          <i data-lucide="user-round"
-             width="16"
-             height="16"></i>
+
+          <i
+            data-lucide="user-round"
+            width="16"
+            height="16">
+          </i>
 
           <span class="login-text">
             ${escapeHTML(user.name)}
           </span>
+
         `;
 
-        loginButton.dataset.loggedIn =
-          "true";
+
+        loginButton.onclick =
+          () => {
+
+            const confirmLogout =
+              window.confirm(
+                "¿Quieres cerrar sesión?"
+              );
+
+
+            if (
+              confirmLogout
+            ) {
+
+              logout();
+
+            }
+
+          };
+
 
         loginButton.setAttribute(
           "aria-label",
           "Cerrar sesión"
         );
+
       }
 
-      if (mobileLoginButton) {
+
+      if (
+        mobileLoginButton
+      ) {
 
         mobileLoginButton.textContent =
           `Cerrar sesión (${user.name})`;
 
-      }
 
-      if (loginButton) {
+        mobileLoginButton.onclick =
+          () => {
 
-        loginButton.onclick = () => {
+            closeMobileMenu();
 
-          const confirmLogout =
-            window.confirm(
-              "¿Quieres cerrar sesión?"
-            );
 
-          if (confirmLogout) {
-            logout();
-          }
+            const confirmLogout =
+              window.confirm(
+                "¿Quieres cerrar sesión?"
+              );
 
-        };
-      }
 
-      if (mobileLoginButton) {
+            if (
+              confirmLogout
+            ) {
 
-        mobileLoginButton.onclick = () => {
+              logout();
 
-          closeMobileMenu();
+            }
 
-          const confirmLogout =
-            window.confirm(
-              "¿Quieres cerrar sesión?"
-            );
+          };
 
-          if (confirmLogout) {
-            logout();
-          }
-
-        };
       }
 
     } else {
@@ -1367,28 +1782,39 @@ document.addEventListener("DOMContentLoaded", () => {
       if (loginButton) {
 
         loginButton.innerHTML = `
-          <i data-lucide="user-round"
-             width="16"
-             height="16"></i>
+
+          <i
+            data-lucide="user-round"
+            width="16"
+            height="16">
+          </i>
 
           <span class="login-text">
             Iniciar sesión
           </span>
+
         `;
+
 
         loginButton.onclick =
           () => openAuth("login");
+
 
         loginButton.setAttribute(
           "aria-label",
           "Iniciar sesión"
         );
+
       }
 
-      if (mobileLoginButton) {
+
+      if (
+        mobileLoginButton
+      ) {
 
         mobileLoginButton.textContent =
           "Iniciar sesión";
+
 
         mobileLoginButton.onclick =
           () => {
@@ -1396,30 +1822,39 @@ document.addEventListener("DOMContentLoaded", () => {
             closeMobileMenu();
 
             openAuth("login");
+
           };
+
       }
+
     }
+
 
     if (window.lucide) {
       lucide.createIcons();
     }
+
   }
 
 
   /* =======================================================
      ESCAPE HTML
-     Protección básica cuando mostramos nombres
   ======================================================= */
 
   function escapeHTML(value) {
 
     const div =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     div.textContent =
       String(value);
 
+
     return div.innerHTML;
+
   }
 
 
@@ -1427,18 +1862,25 @@ document.addEventListener("DOMContentLoaded", () => {
      NOTIFICACIONES
   ======================================================= */
 
-  function showNotification(message) {
+  function showNotification(
+    message
+  ) {
 
     let notification =
       $("#caoticco-notification");
 
+
     if (!notification) {
 
       notification =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       notification.id =
         "caoticco-notification";
+
 
       notification.style.position =
         "fixed";
@@ -1488,23 +1930,30 @@ document.addEventListener("DOMContentLoaded", () => {
       notification.style.opacity =
         "0";
 
+
       document.body.appendChild(
         notification
       );
+
     }
+
 
     notification.textContent =
       message;
 
+
     notification.style.opacity =
       "1";
+
 
     notification.style.transform =
       "translate(-50%, 0)";
 
+
     clearTimeout(
       notification._timeout
     );
+
 
     notification._timeout =
       setTimeout(() => {
@@ -1516,42 +1965,63 @@ document.addEventListener("DOMContentLoaded", () => {
           "translate(-50%, 120px)";
 
       }, 2800);
+
   }
 
 
   /* =======================================================
-     CERRAR MODALES CON ESC
+     ESC
   ======================================================= */
 
   document.addEventListener(
     "keydown",
     (event) => {
 
-      if (event.key !== "Escape") {
+      if (
+        event.key !==
+        "Escape"
+      ) {
         return;
       }
+
 
       if (
         authModal &&
-        authModal.classList.contains("open")
+        authModal.classList.contains(
+          "open"
+        )
       ) {
+
         closeAuth();
+
         return;
+
       }
+
 
       if (
         cartModal &&
-        cartModal.classList.contains("open")
+        cartModal.classList.contains(
+          "open"
+        )
       ) {
+
         closeCart();
+
         return;
+
       }
+
 
       if (
         mobileMenu &&
-        mobileMenu.classList.contains("open")
+        mobileMenu.classList.contains(
+          "open"
+        )
       ) {
+
         closeMobileMenu();
+
       }
 
     }
@@ -1559,7 +2029,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =======================================================
-     EVITAR FONDO AL HACER CLICK EN MODAL
+     CERRAR MODAL AUTH
   ======================================================= */
 
   if (authModal) {
@@ -1569,13 +2039,17 @@ document.addEventListener("DOMContentLoaded", () => {
       (event) => {
 
         if (
-          event.target === authModal
+          event.target ===
+          authModal
         ) {
+
           closeAuth();
+
         }
 
       }
     );
+
   }
 
 
@@ -1583,15 +2057,18 @@ document.addEventListener("DOMContentLoaded", () => {
      NAVEGACIÓN SUAVE
   ======================================================= */
 
-  $$('a[href^="#"]').forEach(
-    (link) => {
+  $$('a[href^="#"]')
+    .forEach((link) => {
 
       link.addEventListener(
         "click",
         (event) => {
 
           const href =
-            link.getAttribute("href");
+            link.getAttribute(
+              "href"
+            );
+
 
           if (
             !href ||
@@ -1600,12 +2077,20 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          const target =
-            document.querySelector(href);
 
-          if (!target) return;
+          const target =
+            document.querySelector(
+              href
+            );
+
+
+          if (!target) {
+            return;
+          }
+
 
           event.preventDefault();
+
 
           target.scrollIntoView({
             behavior: "smooth",
@@ -1615,34 +2100,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       );
 
-    }
-  );
+    });
 
 
   /* =======================================================
-     CARRITO INICIAL
-  ======================================================= */
-
-  updateCartCount();
-  renderCart();
-
-
-  /* =======================================================
-     USUARIO INICIAL
-  ======================================================= */
-
-  updateUserInterface();
-
-
-  /* =======================================================
-     CREAR PRODUCTOS SI EXISTE EL CONTENEDOR
-     
-     Esto permite que el JS funcione aunque todavía
-     no hayas escrito manualmente las tarjetas en HTML.
+     PRODUCTOS DINÁMICOS
   ======================================================= */
 
   const productsContainer =
     $("#products-container");
+
 
   if (productsContainer) {
 
@@ -1653,91 +2120,213 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderProducts() {
 
-    if (!productsContainer) return;
+    if (!productsContainer) {
+      return;
+    }
+
 
     productsContainer.innerHTML =
       products
         .map(
-          (product, index) => `
-            <article class="product-card reveal in-view">
+          (product, index) => {
 
-              <div class="product-image">
+            /*
+              Producto 3 utiliza sus fotografías.
+            */
 
-                <span class="product-number">
-                  ${String(index + 1).padStart(2, "0")}
-                </span>
+            if (product.id === 3) {
 
-                <i
-                  data-lucide="${product.icon}"
-                  width="85"
-                  height="85"
-                ></i>
+              return `
 
-              </div>
+                <article
+                  class="product-card reveal in-view"
+                  data-product-id="3"
+                  data-product-name="TOTE BAG BASIC"
+                  data-product-price="50000"
+                >
 
-              <div class="product-info">
+                  <div class="product-image">
 
-                <h3 class="product-name display">
-                  ${escapeHTML(product.name)}
-                </h3>
+                    <span class="product-number">
+                      03
+                    </span>
 
-                <p class="product-description">
-                  ${escapeHTML(product.description)}
-                </p>
+                    <img
+                      id="product-image-3"
+                      src="logo.jpeg"
+                      alt="Tote Bag Basic"
+                      class="clickable-product-image"
+                    >
 
-                <div class="product-bottom">
+                  </div>
 
-                  <strong class="product-price">
-                    ${formatPrice(product.price)}
-                  </strong>
 
-                  <button
-                    type="button"
-                    class="product-add"
-                    data-product-id="${product.id}"
-                  >
-                    <i
-                      data-lucide="shopping-bag"
-                      width="15"
-                      height="15"
-                    ></i>
+                  <div class="product-info">
 
-                    Añadir
-                  </button>
+                    <h3 class="display product-name">
+                      TOTE BAG BASIC
+                    </h3>
+
+
+                    <p class="product-description">
+                      Una pieza esencial elevada por un diseño exclusivo y acabados premium.
+                    </p>
+
+
+                    <div class="product-bottom">
+
+                      <strong class="product-price">
+                        $50.000
+                      </strong>
+
+
+                      <button
+                        type="button"
+                        class="product-add"
+                        data-add-cart="3"
+                      >
+
+                        <i
+                          data-lucide="plus"
+                          width="17">
+                        </i>
+
+                        Añadir
+
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </article>
+
+              `;
+
+            }
+
+
+            return `
+
+              <article
+                class="product-card reveal in-view"
+                data-product-id="${product.id}"
+              >
+
+                <div class="product-image">
+
+                  <span class="product-number">
+                    ${String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <i
+                    data-lucide="${product.icon}"
+                    width="85"
+                    height="85">
+                  </i>
 
                 </div>
 
-              </div>
 
-            </article>
-          `
+                <div class="product-info">
+
+                  <h3 class="product-name display">
+                    ${escapeHTML(product.name)}
+                  </h3>
+
+
+                  <p class="product-description">
+                    ${escapeHTML(product.description)}
+                  </p>
+
+
+                  <div class="product-bottom">
+
+                    <strong class="product-price">
+                      ${formatPrice(product.price)}
+                    </strong>
+
+
+                    <button
+                      type="button"
+                      class="product-add"
+                      data-add-cart="${product.id}"
+                    >
+
+                      <i
+                        data-lucide="plus"
+                        width="15"
+                        height="15">
+                      </i>
+
+                      Añadir
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </article>
+
+            `;
+
+          }
         )
         .join("");
+
+
+    /*
+      Volvemos a activar el clic
+      después de crear las tarjetas.
+    */
+
+    setupProductImage3();
+
+
+    /*
+      Botones añadir al carrito.
+    */
 
     $$(".product-add", productsContainer)
       .forEach((button) => {
 
         button.addEventListener(
           "click",
-          () => {
+          (event) => {
+
+            event.stopPropagation();
+
 
             const id =
-              Number(button.dataset.productId);
+              Number(
+                button.dataset.addCart
+              );
 
-            addToCart(id);
+
+            if (
+              !Number.isNaN(id)
+            ) {
+
+              addToCart(id);
+
+            }
+
           }
         );
 
       });
 
+
     if (window.lucide) {
       lucide.createIcons();
     }
+
   }
 
 
   /* =======================================================
-     DETECTAR CLIC FUERA DE MENÚ
+     CLIC FUERA DEL MENÚ
   ======================================================= */
 
   document.addEventListener(
@@ -1751,22 +2340,29 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+
       const clickedInsideMenu =
         mobileMenu.contains(
           event.target
         );
+
 
       const clickedToggle =
         menuToggle.contains(
           event.target
         );
 
+
       if (
-        mobileMenu.classList.contains("open") &&
+        mobileMenu.classList.contains(
+          "open"
+        ) &&
         !clickedInsideMenu &&
         !clickedToggle
       ) {
+
         closeMobileMenu();
+
       }
 
     }
@@ -1774,7 +2370,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =======================================================
-     ACTUALIZAR CARRITO CUANDO CAMBIA OTRA PESTAÑA
+     STORAGE
   ======================================================= */
 
   window.addEventListener(
@@ -1790,15 +2386,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
           cart =
             event.newValue
-              ? JSON.parse(event.newValue)
+              ? JSON.parse(
+                  event.newValue
+                )
               : [];
+
 
           renderCart();
 
         } catch {
+
           cart = [];
+
         }
+
       }
+
 
       if (
         event.key ===
@@ -1806,6 +2409,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ) {
 
         updateUserInterface();
+
       }
 
     }
@@ -1813,8 +2417,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =======================================================
-     LOG INICIAL
+     INICIO
   ======================================================= */
+
+  updateCartCount();
+
+  renderCart();
+
+  updateUserInterface();
+
 
   console.log(
     "%cCAOTICCO",
@@ -1826,6 +2437,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `
   );
 
+
   console.log(
     "%cCultura en movimiento.",
     `
@@ -1836,177 +2448,3 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
 });
-
-
-    /* Cerrar menú al seleccionar un enlace */
-
-    document
-      .querySelectorAll("#mobile-menu a")
-      .forEach((link) => {
-
-        link.addEventListener("click", () => {
-          mobileMenu.classList.remove("open");
-
-          menuToggle.setAttribute(
-            "aria-expanded",
-            "false"
-          );
-
-          menuToggle.setAttribute(
-            "aria-label",
-            "Abrir menú de navegación"
-          );
-        });
-
-      });
-  }
-
-
-  /* =========================
-     ANIMACIONES AL HACER SCROLL
-  ========================= */
-
-  const revealElements =
-    document.querySelectorAll(".reveal");
-
-  if ("IntersectionObserver" in window) {
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-
-        entries.forEach((entry) => {
-
-          if (entry.isIntersecting) {
-
-            entry.target.classList.add(
-              "in-view"
-            );
-
-            observer.unobserve(
-              entry.target
-            );
-          }
-
-        });
-
-      },
-      {
-        threshold: 0.12,
-        rootMargin: "0px 0px -40px 0px"
-      }
-    );
-
-    revealElements.forEach((element) => {
-      observer.observe(element);
-    });
-
-  } else {
-
-    revealElements.forEach((element) => {
-      element.classList.add("in-view");
-    });
-
-  }
-
-
-  /* =========================
-     ALTURA REAL DEL VIEWPORT
-  ========================= */
-
-  function updateViewportHeight() {
-
-    const viewportHeight =
-      window.innerHeight * 0.01;
-
-    document.documentElement.style.setProperty(
-      "--vh",
-      `${viewportHeight}px`
-    );
-  }
-
-
-  updateViewportHeight();
-
-
-  /* Actualizar al cambiar tamaño */
-
-  window.addEventListener(
-    "resize",
-    updateViewportHeight,
-    { passive: true }
-  );
-
-
-  /* Actualizar al cambiar orientación */
-
-  window.addEventListener(
-    "orientationchange",
-    () => {
-      setTimeout(
-        updateViewportHeight,
-        150
-      );
-    },
-    { passive: true }
-  );
-
-
-  /* =========================
-     CERRAR MENÚ SI PASAMOS A DESKTOP
-  ========================= */
-
-  window.addEventListener(
-    "resize",
-    () => {
-
-      if (
-        window.innerWidth >= 1024 &&
-        mobileMenu &&
-        menuToggle
-      ) {
-
-        mobileMenu.classList.remove(
-          "open"
-        );
-
-        menuToggle.setAttribute(
-          "aria-expanded",
-          "false"
-        );
-
-        menuToggle.setAttribute(
-          "aria-label",
-          "Abrir menú de navegación"
-        );
-      }
-/* =====================================================
-   CAMBIO DE FOTOS - PRODUCTO 3
-===================================================== */
-
-const productImages3 = [
-  "logo.jpeg",
-  "lince.png",
-  "inicio.jpeg"
-];
-
-let currentImage3 = 0;
-
-const productImage3 = document.getElementById("product-image-3");
-
-if (productImage3) {
-
-  productImage3.style.cursor = "pointer";
-
-  productImage3.addEventListener("click", function () {
-
-    currentImage3++;
-
-    if (currentImage3 >= productImages3.length) {
-      currentImage3 = 0;
-    }
-
-    productImage3.src = productImages3[currentImage3];
-
-  });
-
-}
