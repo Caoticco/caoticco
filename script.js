@@ -640,9 +640,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
           const images = [
-            "logo.jpeg",
-            "lince.png",
-            "inicio.jpeg"
+            "tote1.jpeg",
+            "tote2.png",
+            "tote3.jpeg"
           ];
 
 
