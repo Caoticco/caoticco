@@ -1982,8 +1982,8 @@ document.addEventListener("DOMContentLoaded", () => {
 const productImages = {
   3: [
     "logo.jpeg",
-    "logo2.jpeg",
-    "logo3.jpeg"
+    "lince.png",
+    "inicio.jpeg"
   ]
 };
 
