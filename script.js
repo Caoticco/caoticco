@@ -641,7 +641,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const images = [
             "tote1.jpeg",
-            "tote2.png",
+            "tote2.jpeg",
             "tote3.jpeg"
           ];
 
