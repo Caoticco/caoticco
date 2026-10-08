@@ -148,10 +148,6 @@ body::before{
 }
 
 
-/* =========================================
-   NAV DESKTOP
-========================================= */
-
 .nav-links{
 
     display:flex;
@@ -176,11 +172,6 @@ body::before{
 
     color:var(--wine-bright);
 }
-
-
-/* =========================================
-   ACCIONES NAV
-========================================= */
 
 .nav-actions{
 
@@ -210,7 +201,7 @@ body::before{
 
     border:1px solid var(--line);
 
-    background:var(--wine-dark);
+    background:#501419;
 
     color:var(--paper);
 
@@ -295,7 +286,7 @@ body::before{
 
 
 /* =========================================
-   BOTÓN USUARIO
+   BOTONES NAV
 ========================================= */
 
 .nav-button{
@@ -314,7 +305,7 @@ body::before{
 
     border:1px solid var(--line);
 
-    background:var(--wine-dark);
+    background:#501419;
 
     color:var(--paper);
 
@@ -330,7 +321,7 @@ body::before{
 
 
 /* =========================================
-   ICONO USUARIO
+   ICONOS
 ========================================= */
 
 .cart-icon{
@@ -438,14 +429,61 @@ body::before{
 
 
 /* =========================================
+   CONTADOR DEL CARRITO
+========================================= */
+
+.cart-count{
+
+    position:absolute;
+
+    top:-5px;
+
+    right:-5px;
+
+    min-width:18px;
+
+    height:18px;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:var(--wine-bright);
+
+    color:white;
+
+    font-size:.6rem;
+
+    font-weight:800;
+}
+
+.cart-count.show{
+
+    display:flex;
+}
+
+
+/* =========================================
    HERO
 ========================================= */
 
 .hero{
 
+    position:relative;
+
     min-height:75vh;
 
-    position:relative;
+    background-image:url("caoticco.gif");
+
+    background-size:cover;
+
+    background-position:center;
+
+    background-repeat:no-repeat;
 
     display:flex;
 
@@ -454,19 +492,6 @@ body::before{
     padding:7rem 7%;
 
     overflow:hidden;
-
-    background-image:
-        linear-gradient(
-            rgba(8,7,7,.25),
-            rgba(8,7,7,.4)
-        ),
-        url("caoticco.gif");
-
-    background-size:cover;
-
-    background-position:center;
-
-    background-repeat:no-repeat;
 }
 
 .hero-content{
@@ -639,11 +664,13 @@ body::before{
     justify-content:center;
 
     background:
+
         radial-gradient(
             circle,
             rgba(164,43,49,.2),
             transparent 60%
         ),
+
         #0c0a0a;
 
     overflow:hidden;
@@ -677,11 +704,6 @@ body::before{
 
     color:rgba(244,240,235,.12);
 }
-
-
-/* =========================================
-   INFORMACIÓN PRODUCTO
-========================================= */
 
 .product-info{
 
@@ -754,19 +776,6 @@ body::before{
     gap:.15rem;
 }
 
-.promo-label{
-
-    color:var(--wine-bright);
-
-    font-size:.55rem;
-
-    font-weight:800;
-
-    letter-spacing:.1em;
-
-    text-transform:uppercase;
-}
-
 .price-old{
 
     color:rgba(244,240,235,.45);
@@ -785,6 +794,19 @@ body::before{
     font-size:1rem;
 
     font-weight:800;
+}
+
+.promo-label{
+
+    color:var(--muted);
+
+    font-size:.55rem;
+
+    font-weight:800;
+
+    letter-spacing:.1em;
+
+    text-transform:uppercase;
 }
 
 
@@ -818,6 +840,351 @@ body::before{
     background:var(--wine-bright);
 
     border-color:var(--wine-bright);
+}
+
+
+/* =========================================
+   CARRITO
+========================================= */
+
+.cart-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:300;
+
+    visibility:hidden;
+
+    opacity:0;
+
+    transition:.3s;
+}
+
+.cart-overlay.open{
+
+    visibility:visible;
+
+    opacity:1;
+}
+
+.cart-bg{
+
+    position:absolute;
+
+    inset:0;
+
+    background:rgba(0,0,0,.8);
+
+    backdrop-filter:blur(6px);
+}
+
+.cart{
+
+    position:absolute;
+
+    top:0;
+
+    right:0;
+
+    width:min(100%,480px);
+
+    height:100%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    background:#100d0e;
+
+    border-left:1px solid var(--line);
+
+    transform:translateX(100%);
+
+    transition:.35s;
+}
+
+.cart-overlay.open .cart{
+
+    transform:translateX(0);
+}
+
+.cart-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    padding:2rem;
+
+    border-bottom:1px solid var(--line);
+}
+
+.cart-title{
+
+    font-family:"Barlow Condensed",sans-serif;
+
+    font-size:4rem;
+
+    font-weight:900;
+
+    line-height:.8;
+}
+
+.close{
+
+    width:40px;
+
+    height:40px;
+
+    border:1px solid var(--line);
+
+    background:transparent;
+
+    color:var(--paper);
+}
+
+.close:hover{
+
+    border-color:var(--wine-bright);
+
+    background:var(--wine);
+}
+
+.cart-items{
+
+    flex:1;
+
+    overflow-y:auto;
+
+    padding:1.5rem;
+}
+
+.empty{
+
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex-direction:column;
+
+    gap:1rem;
+
+    color:var(--muted);
+
+    text-align:center;
+}
+
+.cart-item{
+
+    display:grid;
+
+    grid-template-columns:
+        75px 1fr auto;
+
+    gap:1rem;
+
+    padding:1rem 0;
+
+    border-bottom:1px solid var(--line);
+}
+
+.cart-item-image{
+
+    width:75px;
+
+    height:75px;
+
+    background:#0a0909;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    overflow:hidden;
+}
+
+.cart-item-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+}
+
+.cart-item-name{
+
+    font-family:"Barlow Condensed",sans-serif;
+
+    font-size:1.5rem;
+
+    font-weight:800;
+
+    line-height:.9;
+}
+
+.cart-item-price{
+
+    margin-top:.4rem;
+
+    font-size:.7rem;
+
+    display:flex;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:.2rem;
+}
+
+.cart-price-old{
+
+    color:rgba(244,240,235,.45);
+
+    text-decoration:line-through;
+
+    text-decoration-thickness:1px;
+
+    font-size:.7rem;
+}
+
+.cart-price-promo{
+
+    color:white;
+
+    font-size:.85rem;
+
+    font-weight:800;
+}
+
+.quantity{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.3rem;
+
+    margin-top:.7rem;
+}
+
+.quantity button{
+
+    width:27px;
+
+    height:27px;
+
+    border:1px solid var(--line);
+
+    background:transparent;
+
+    color:var(--paper);
+}
+
+.quantity button:hover{
+
+    background:var(--wine);
+}
+
+.quantity span{
+
+    min-width:25px;
+
+    text-align:center;
+
+    font-size:.75rem;
+}
+
+.remove{
+
+    border:0;
+
+    background:transparent;
+
+    color:rgba(244,240,235,.35);
+
+    font-size:.6rem;
+}
+
+.remove:hover{
+
+    color:var(--danger);
+}
+
+
+/* =========================================
+   TOTAL
+========================================= */
+
+.cart-footer{
+
+    padding:1.5rem 2rem 2rem;
+
+    border-top:1px solid var(--line);
+}
+
+.total{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:1rem;
+}
+
+.total span{
+
+    color:var(--muted);
+
+    font-size:.7rem;
+
+    font-weight:700;
+
+    letter-spacing:.1em;
+}
+
+.total strong{
+
+    font-family:"Barlow Condensed",sans-serif;
+
+    font-size:2rem;
+}
+
+.checkout{
+
+    width:100%;
+
+    min-height:3.3rem;
+
+    border:0;
+
+    background:var(--wine);
+
+    color:white;
+
+    font-size:.7rem;
+
+    font-weight:800;
+
+    letter-spacing:.12em;
+
+    text-transform:uppercase;
+}
+
+.checkout:hover{
+
+    background:var(--wine-bright);
 }
 
 
@@ -864,6 +1231,12 @@ footer p{
 
 @media(max-width:1000px){
 
+    .products{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
     .nav-links{
 
         display:none !important;
@@ -872,12 +1245,6 @@ footer p{
     .mobile-menu-button{
 
         display:flex;
-    }
-
-    .products{
-
-        grid-template-columns:
-            repeat(2,1fr);
     }
 
 }
@@ -1016,6 +1383,7 @@ footer p{
 
     <div class="nav-actions">
 
+
         <!-- USUARIO -->
 
         <div class="user-menu">
@@ -1055,6 +1423,30 @@ footer p{
             </div>
 
         </div>
+
+
+        <!-- CARRITO -->
+
+        <button
+            class="nav-button"
+            onclick="openCart()"
+            aria-label="Carrito"
+        >
+
+            <img
+                src="carrito.png"
+                alt="Carrito"
+                class="cart-icon"
+            >
+
+            <span
+                class="cart-count"
+                id="cartCount"
+            >
+                0
+            </span>
+
+        </button>
 
     </div>
 
@@ -1225,7 +1617,7 @@ footer p{
         "
     >
 
-        CAOTICCO nace del caos creativo de la ciudad.
+        CAÓTICCO nace del caos creativo de la ciudad.
         Creemos en prendas que no permanecen estáticas:
         se transforman, se adaptan y cuentan nuevas historias.
         Cada prenda es una posibilidad.
@@ -1258,6 +1650,80 @@ footer p{
 
 
 <!-- =========================================
+     CARRITO
+========================================= -->
+
+<div
+    class="cart-overlay"
+    id="cartOverlay"
+>
+
+    <div
+        class="cart-bg"
+        onclick="closeCart()"
+    ></div>
+
+
+    <aside class="cart">
+
+
+        <div class="cart-header">
+
+            <h2 class="cart-title">
+
+                TU<br>
+                CARRITO
+
+            </h2>
+
+
+            <button
+                class="close"
+                onclick="closeCart()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+
+        <div
+            class="cart-items"
+            id="cartItems"
+        ></div>
+
+
+        <div class="cart-footer">
+
+            <div class="total">
+
+                <span>
+                    TOTAL
+                </span>
+
+
+                <strong id="cartTotal">
+                    $0
+                </strong>
+
+            </div>
+
+
+            <button
+                class="checkout"
+                onclick="checkout()"
+            >
+                CONTINUAR COMPRA
+            </button>
+
+        </div>
+
+    </aside>
+
+</div>
+
+
+<!-- =========================================
      SUPABASE
 ========================================= -->
 
@@ -1281,16 +1747,6 @@ const supabaseClient =
         SUPABASE_URL,
         SUPABASE_KEY
     );
-
-
-/* =========================================
-   FECHA DE APERTURA DE PREVENTA
-========================================= */
-
-const countdownStart =
-    new Date(
-        "2026-09-28T00:00:00-05:00"
-    ).getTime();
 
 
 /* =========================================
@@ -1345,7 +1801,7 @@ const products = [
         category:"Agotado",
 
         description:
-            "Pants 3/1 (short, skirt) sostenible",
+            "Pants 3/1 (short,skirt) sostenible",
 
         price:0,
 
@@ -1358,32 +1814,30 @@ const products = [
 
         name:"CAPE CCC-0",
 
-        category:"AGOTADO",
+        category:"Agotado",
 
         description:
             "Buzo transformable (capa)",
 
-       
+        price:200000,
 
-        oldPrice:0,
+        oldPrice:240000,
 
-        image:"CAPE_001.jpeg",
-
-        hasCountdown:true
+        image:"CAPE_001.jpeg"
     },
 
 
     {
         id:3,
 
-        name:"TOTE BAG BASIC",
+        name:"CCC 03",
 
         category:"Transformable",
 
         description:
-            "Tote bag transformable con diseño exclusivo CAOTICCO.",
+            "???",
 
-        price:50000,
+        price:0,
 
         image:"tote1.jpeg",
 
@@ -1403,7 +1857,7 @@ const products = [
         category:"Limited",
 
         description:
-            "Próximamente.",
+            "???",
 
         price:0,
 
@@ -1411,6 +1865,23 @@ const products = [
     }
 
 ];
+
+
+/* =========================================
+   CARRITO
+========================================= */
+
+let cart =
+    JSON.parse(
+        localStorage.getItem("caoticcoCart")
+    ) || [];
+
+
+/* =========================================
+   ÍNDICES DE FOTOS
+========================================= */
+
+const productImageIndexes = {};
 
 
 /* =========================================
@@ -1441,19 +1912,11 @@ function renderProducts(){
         document.getElementById("products");
 
 
-    if(!container){
-        return;
-    }
-
-
     container.innerHTML =
 
         products.map(product => `
 
-            <article
-                class="product"
-                data-product-id="${product.id}"
-            >
+            <article class="product">
 
 
                 <div
@@ -1463,12 +1926,11 @@ function renderProducts(){
                         product.images
                         ?
                         `onclick="changeProductImage(${product.id})"
-                          style="cursor:pointer;"`
+                         style="cursor:pointer;"`
                         :
                         ""
                     }
                 >
-
 
                     ${
                         product.image
@@ -1476,18 +1938,17 @@ function renderProducts(){
                         ?
 
                         `<img
-                            id="product-image-${product.id}"
                             src="${product.image}"
                             alt="${product.name}"
+                            id="product-image-${product.id}"
                         >`
 
                         :
 
                         `<div class="product-placeholder">
-                            
+                            C
                         </div>`
                     }
-
 
                 </div>
 
@@ -1510,98 +1971,74 @@ function renderProducts(){
                     </p>
 
 
-                    ${
-                        product.hasCountdown
-                        ?
-                        `
-
-                        <div
-                            style="
-                                margin-top:1rem;
-                                padding:.8rem 0;
-                                border-top:1px solid var(--line);
-                                border-bottom:1px solid var(--line);
-                            "
-                        >
-
-                            <div
-                                style="
-                                    color:var(--wine-bright);
-                                    font-size:.55rem;
-                                    font-weight:800;
-                                    letter-spacing:.12em;
-                                    text-transform:uppercase;
-                                    margin-bottom:.35rem;
-                                "
-                            >
-                               
-                            </div>
-
-
-                            <div
-                                id="countdown-${product.id}"
-                                style="
-                                    font-family:'Barlow Condensed',sans-serif;
-                                    font-size:1.4rem;
-                                    font-weight:800;
-                                    letter-spacing:.08em;
-                                "
-                            >
-                            </div>
-
-                        </div>
-
-                        `
-                        :
-                        ""
-                    }
-
-
                     <div class="product-bottom">
 
 
                         <div class="price-box">
 
-
                             ${
-                                product.oldPrice
+                                product.category === "Agotado"
+
                                 ?
-                                `
 
-                             
+                                `<span
+                                    class="promo-label"
+                                >
+                                    AGOTADO
+                                </span>`
 
-                                <span class="price-old">
-                                    ${formatPrice(product.oldPrice)}
-                                </span>
-
-                                `
                                 :
-                                ""
+
+                                `
+                                    ${
+                                        product.oldPrice
+                                        ?
+                                        `
+                                            <span class="price-old">
+                                                ${formatPrice(product.oldPrice)}
+                                            </span>
+                                        `
+                                        :
+                                        ""
+                                    }
+
+                                    ${
+                                        product.price > 0
+                                        ?
+                                        `
+                                            <span class="price-promo">
+                                                ${formatPrice(product.price)}
+                                            </span>
+                                        `
+                                        :
+                                        ""
+                                    }
+                                `
                             }
-
-
-                            <span class="price-promo">
-                                ${formatPrice(product.price)}
-                            </span>
-
 
                         </div>
 
 
-                        <button
-                            class="add-button"
-                            id="add-button-${product.id}"
-                            onclick="goToLogin()"
-                            ${
-                                product.hasCountdown
-                                ?
-                                'style="display:none;"'
-                                :
-                                ""
-                            }
-                        >
-                            AÑADIR
-                        </button>
+                        ${
+                            product.category !== "Agotado"
+                            &&
+                            product.price > 0
+
+                            ?
+
+                            `
+                                <button
+                                    class="add-button"
+                                    onclick="addToCart(${product.id})"
+                                >
+                                    AÑADIR
+                                </button>
+                            `
+
+                            :
+
+                            ""
+                        }
 
 
                     </div>
@@ -1617,11 +2054,8 @@ function renderProducts(){
 
 
 /* =========================================
-   CAMBIAR IMÁGENES CCC 03
+   CAMBIO MANUAL DE FOTOS
 ========================================= */
-
-const productImageIndexes = {};
-
 
 function changeProductImage(id){
 
@@ -1695,26 +2129,14 @@ function changeProductImage(id){
 
 
 /* =========================================
-   IR A LOGIN
+   AGREGAR AL CARRITO
 ========================================= */
 
-function goToLogin(){
-
-    window.location.href =
-        "login.html";
-
-}
-
-
-/* =========================================
-   CUENTA REGRESIVA
-========================================= */
-
-function updateCountdown(){
+function addToCart(id){
 
     const product =
         products.find(
-            p => p.hasCountdown
+            p => p.id === id
         );
 
 
@@ -1725,123 +2147,351 @@ function updateCountdown(){
     }
 
 
-    const countdown =
-        document.getElementById(
-            `countdown-${product.id}`
-        );
-
-
-    const button =
-        document.getElementById(
-            `add-button-${product.id}`
-        );
-
-
-    if(!countdown){
+    if(
+        product.category === "Agotado" ||
+        !product.price ||
+        product.price <= 0
+    ){
 
         return;
 
     }
 
 
-    const now =
-        new Date().getTime();
+    const existing =
+        cart.find(
+            item => item.id === id
+        );
 
 
-    const distance =
-        countdownStart - now;
+    if(existing){
+
+        existing.quantity++;
+
+        existing.price =
+            product.price;
+
+        existing.oldPrice =
+            product.oldPrice;
+
+    }else{
+
+        cart.push({
+
+            ...product,
+
+            quantity:1
+
+        });
+
+    }
 
 
-    if(distance > 0){
+    saveCart();
 
-        const days =
-            Math.floor(
-                distance /
-                (1000 * 60 * 60 * 24)
-            );
+    renderCart();
 
+    openCart();
 
-        const hours =
-            Math.floor(
-                (
-                    distance %
-                    (1000 * 60 * 60 * 24)
-                ) /
-                (1000 * 60 * 60)
-            );
+}
 
 
-        const minutes =
-            Math.floor(
-                (
-                    distance %
-                    (1000 * 60 * 60)
-                ) /
-                (1000 * 60)
-            );
+/* =========================================
+   GUARDAR CARRITO
+========================================= */
+
+function saveCart(){
+
+    localStorage.setItem(
+        "caoticcoCart",
+        JSON.stringify(cart)
+    );
+
+}
 
 
-        const seconds =
-            Math.floor(
-                (
-                    distance %
-                    (1000 * 60)
-                ) /
-                1000
-            );
+/* =========================================
+   MOSTRAR CARRITO
+========================================= */
+
+function renderCart(){
+
+    const container =
+        document.getElementById("cartItems");
 
 
-        countdown.textContent =
-
-            `${String(days).padStart(2,"0")} D  ` +
-
-            `${String(hours).padStart(2,"0")} : ` +
-
-            `${String(minutes).padStart(2,"0")} : ` +
-
-            `${String(seconds).padStart(2,"0")}`;
-
-
-        if(button){
-
-            button.style.display =
-                "none";
-
-        }
-
+    if(!container){
 
         return;
 
     }
 
 
-    countdown.innerHTML =
+    if(cart.length === 0){
 
-        `<span
-            style="
-                color:var(--wine-bright);
-                font-family:'Barlow Condensed',sans-serif;
-                font-size:1.2rem;
-                font-weight:800;
-                letter-spacing:.08em;
-            "
-        >
-            PRE-VENTA ABIERTA
-        </span>`;
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div style="font-size:3rem;">
+                    🛒
+                </div>
 
 
-    if(button){
+                <p>
+                    Tu carrito está vacío.
+                </p>
 
-        button.style.display =
-            "block";
 
-        button.disabled =
-            false;
+                <button
+                    class="add-button"
+                    onclick="closeCart()"
+                >
+                    VER PRODUCTOS
+                </button>
 
-        button.textContent =
-            "AÑADIR";
+            </div>
+
+        `;
+
+    }else{
+
+        container.innerHTML =
+
+            cart.map(item => `
+
+                <div class="cart-item">
+
+
+                    <div class="cart-item-image">
+
+                        ${
+                            item.image
+
+                            ?
+
+                            `<img
+                                src="${item.image}"
+                                alt="${item.name}"
+                            >`
+
+                            :
+
+                            `<span
+                                style="
+                                    font-family:'Barlow Condensed';
+                                    font-size:2rem;
+                                "
+                            >
+                                C
+                            </span>`
+                        }
+
+                    </div>
+
+
+                    <div>
+
+
+                        <div class="cart-item-name">
+                            ${item.name}
+                        </div>
+
+
+                        <div class="cart-item-price">
+
+
+                            ${
+                                item.oldPrice
+                                ?
+                                `
+                                    <span class="cart-price-old">
+                                        ${formatPrice(item.oldPrice)}
+                                    </span>
+                                `
+                                :
+                                ""
+                            }
+
+
+                            <span class="cart-price-promo">
+                                ${formatPrice(item.price)}
+                            </span>
+
+
+                        </div>
+
+
+                        <div class="quantity">
+
+
+                            <button
+                                onclick="changeQuantity(${item.id},-1)"
+                            >
+                                −
+                            </button>
+
+
+                            <span>
+                                ${item.quantity}
+                            </span>
+
+
+                            <button
+                                onclick="changeQuantity(${item.id},1)"
+                            >
+                                +
+                            </button>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <button
+                        class="remove"
+                        onclick="removeFromCart(${item.id})"
+                    >
+                        Eliminar
+                    </button>
+
+
+                </div>
+
+            `).join("");
 
     }
+
+
+    /* TOTAL */
+
+    const total =
+        cart.reduce(
+            (sum,item) =>
+                sum +
+                item.price *
+                item.quantity,
+            0
+        );
+
+
+    document.getElementById("cartTotal")
+        .textContent =
+            formatPrice(total);
+
+
+    /* CONTADOR */
+
+    const count =
+        cart.reduce(
+            (sum,item) =>
+                sum +
+                item.quantity,
+            0
+        );
+
+
+    const badge =
+        document.getElementById("cartCount");
+
+
+    badge.textContent =
+        count;
+
+
+    badge.classList.toggle(
+        "show",
+        count > 0
+    );
+
+}
+
+
+/* =========================================
+   CAMBIAR CANTIDAD
+========================================= */
+
+function changeQuantity(id,change){
+
+    const item =
+        cart.find(
+            product =>
+                product.id === id
+        );
+
+
+    if(!item){
+
+        return;
+
+    }
+
+
+    item.quantity += change;
+
+
+    if(item.quantity <= 0){
+
+        cart =
+            cart.filter(
+                product =>
+                    product.id !== id
+            );
+
+    }
+
+
+    saveCart();
+
+    renderCart();
+
+}
+
+
+/* =========================================
+   ELIMINAR
+========================================= */
+
+function removeFromCart(id){
+
+    cart =
+        cart.filter(
+            product =>
+                product.id !== id
+        );
+
+
+    saveCart();
+
+    renderCart();
+
+}
+
+
+/* =========================================
+   ABRIR CARRITO
+========================================= */
+
+function openCart(){
+
+    document
+        .getElementById("cartOverlay")
+        .classList.add("open");
+
+}
+
+
+/* =========================================
+   CERRAR CARRITO
+========================================= */
+
+function closeCart(){
+
+    document
+        .getElementById("cartOverlay")
+        .classList.remove("open");
 
 }
 
@@ -1856,13 +2506,6 @@ function toggleMobileMenu(){
         document.getElementById("mobileMenu");
 
 
-    if(!menu){
-
-        return;
-
-    }
-
-
     menu.classList.toggle("open");
 
 }
@@ -1872,13 +2515,6 @@ function closeMobileMenu(){
 
     const menu =
         document.getElementById("mobileMenu");
-
-
-    if(!menu){
-
-        return;
-
-    }
 
 
     menu.classList.remove("open");
@@ -1892,18 +2528,9 @@ function closeMobileMenu(){
 
 function toggleUserMenu(){
 
-    const dropdown =
-        document.getElementById("userDropdown");
-
-
-    if(!dropdown){
-
-        return;
-
-    }
-
-
-    dropdown.classList.toggle("open");
+    document
+        .getElementById("userDropdown")
+        .classList.toggle("open");
 
 }
 
@@ -1940,7 +2567,75 @@ async function logout(){
 
 
 /* =========================================
-   CERRAR MENÚ AL HACER CLIC FUERA
+   CHECKOUT / WHATSAPP
+========================================= */
+
+function checkout(){
+
+    if(cart.length === 0){
+
+        alert(
+            "Tu carrito está vacío."
+        );
+
+        return;
+
+    }
+
+
+    const phone =
+        "573229025408";
+
+
+    let message =
+        "Hola, quiero comprar en CAOTICCO 🖤\n\n";
+
+
+    message +=
+        "Mi pedido:\n";
+
+
+    cart.forEach(item => {
+
+        const subtotal =
+            item.price *
+            item.quantity;
+
+
+        message +=
+            `• ${item.name} x${item.quantity} — ${formatPrice(subtotal)}\n`;
+
+    });
+
+
+    const total =
+        cart.reduce(
+            (sum,item) =>
+                sum +
+                item.price *
+                item.quantity,
+            0
+        );
+
+
+    message +=
+        `\nTOTAL: ${formatPrice(total)}`;
+
+
+    const whatsappURL =
+        `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+
+    window.open(
+        whatsappURL,
+        "_blank"
+    );
+
+}
+
+
+/* =========================================
+   CERRAR MENÚ USUARIO AL HACER CLIC FUERA
 ========================================= */
 
 document.addEventListener(
@@ -1953,19 +2648,14 @@ document.addEventListener(
             );
 
 
-        const dropdown =
-            document.getElementById(
-                "userDropdown"
-            );
-
-
         if(
             userMenu &&
-            dropdown &&
             !userMenu.contains(event.target)
         ){
 
-            dropdown.classList.remove("open");
+            document
+                .getElementById("userDropdown")
+                .classList.remove("open");
 
         }
 
@@ -1977,83 +2667,31 @@ document.addEventListener(
    INICIALIZAR
 ========================================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
+renderProducts();
 
-        renderProducts();
+renderCart();
 
-        updateCountdown();
-
-        checkSession();
-
-        setInterval(
-            updateCountdown,
-            1000
-        );
+checkSession();
 
 
-        /* Cerrar menú móvil al hacer clic en un enlace */
+/* =========================================
+   VIGILAR SESIÓN
+========================================= */
 
-        const mobileLinks =
-            document.querySelectorAll(
-                "#mobileMenu a"
-            );
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        function(event,session){
 
+            if(!session){
 
-        mobileLinks.forEach(
-            function(link){
-
-                link.addEventListener(
-                    "click",
-                    function(){
-
-                        closeMobileMenu();
-
-                    }
-                );
+                window.location.href =
+                    "login.html";
 
             }
-        );
 
-
-        /* Cerrar menú móvil al pasar a escritorio */
-
-        window.addEventListener(
-            "resize",
-            function(){
-
-                if(
-                    window.innerWidth > 1000
-                ){
-
-                    closeMobileMenu();
-
-                }
-
-            }
-        );
-
-
-        /* Vigilar sesión */
-
-        supabaseClient
-            .auth
-            .onAuthStateChange(
-                function(event,session){
-
-                    if(!session){
-
-                        window.location.href =
-                            "login.html";
-
-                    }
-
-                }
-            );
-
-    }
-);
+        }
+    );
 
 </script>
 
