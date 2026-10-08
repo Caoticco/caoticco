@@ -1979,31 +1979,34 @@ document.addEventListener("DOMContentLoaded", () => {
           "Abrir menú de navegación"
         );
       }
-const productImages = {
-  3: [
-    "logo.jpeg",
-    "lince.png",
-    "inicio.jpeg"
-  ]
-};
+/* =====================================================
+   CAMBIO DE FOTOS - PRODUCTO 3
+===================================================== */
 
-const productIndexes = {
-  3: 0
-};
+const productImages3 = [
+  "logo.jpeg",
+  "lince.png",
+  "inicio.jpeg"
+];
 
-function changeProductImage(productId) {
-  const images = productImages[productId];
+let currentImage3 = 0;
 
-  productIndexes[productId]++;
+const productImage3 = document.getElementById("product-image-3");
 
-  if (productIndexes[productId] >= images.length) {
-    productIndexes[productId] = 0;
-  }
+if (productImage3) {
 
-  document.getElementById("product-image-" + productId).src =
-    images[productIndexes[productId]];
+  productImage3.style.cursor = "pointer";
+
+  productImage3.addEventListener("click", function () {
+
+    currentImage3++;
+
+    if (currentImage3 >= productImages3.length) {
+      currentImage3 = 0;
+    }
+
+    productImage3.src = productImages3[currentImage3];
+
+  });
+
 }
-    },
-    { passive: true }
-  );
-});
