@@ -582,7 +582,23 @@ body::before {
 
   color: rgba(244, 240, 235, 0.75);
 }
+.product-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
 
+.product-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.product-carousel img {
+  width: 100%;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  object-fit: cover;
+}
 .product-image.wine-product {
   background:
     radial-gradient(
