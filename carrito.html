@@ -616,20 +616,41 @@ body::before{
 
 
 /* =========================================
-   PRODUCTOS
+   PRODUCTOS (CARRUSEL)
 ========================================= */
+
+.carousel{
+
+    position:relative;
+}
 
 .products{
 
-    display:grid;
-
-    grid-template-columns:
-        repeat(4,1fr);
+    display:flex;
 
     gap:1rem;
+
+    overflow-x:auto;
+
+    scroll-snap-type:x mandatory;
+
+    scroll-behavior:smooth;
+
+    scrollbar-width:none;
+
+    padding-top:8px; /* para que no se corte el efecto hover */
+}
+
+.products::-webkit-scrollbar{
+
+    display:none;
 }
 
 .product{
+
+    flex:0 0 calc((100% - 2rem) / 3); /* 3 visibles */
+
+    scroll-snap-align:start;
 
     border:1px solid var(--line);
 
@@ -645,6 +666,68 @@ body::before{
     transform:translateY(-6px);
 
     border-color:var(--wine-bright);
+}
+
+
+/* =========================================
+   FLECHAS DEL CARRUSEL
+========================================= */
+
+.carousel-arrow{
+
+    position:absolute;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    z-index:5;
+
+    width:48px;
+
+    height:48px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:1px solid var(--line);
+
+    background:var(--wine-dark);
+
+    color:var(--paper);
+
+    font-size:1.8rem;
+
+    line-height:1;
+
+    transition:.2s;
+}
+
+.carousel-arrow:hover{
+
+    background:var(--wine-bright);
+
+    border-color:var(--wine-bright);
+}
+
+.carousel-arrow:disabled{
+
+    opacity:0;
+
+    pointer-events:none;
+}
+
+.carousel-arrow.prev{
+
+    left:-1.2rem;
+}
+
+.carousel-arrow.next{
+
+    right:-1.2rem;
 }
 
 .product-image{
@@ -1230,10 +1313,9 @@ footer p{
 
 @media(max-width:1000px){
 
-    .products{
+    .product{
 
-        grid-template-columns:
-            repeat(2,1fr);
+        flex:0 0 calc((100% - 1rem) / 2); /* 2 visibles */
     }
 
     .nav-links{
@@ -1288,9 +1370,19 @@ footer p{
         gap:1.5rem;
     }
 
-    .products{
+    .product{
 
-        grid-template-columns:1fr;
+        flex:0 0 85%; /* se asoma el siguiente para invitar a deslizar */
+    }
+
+    .carousel-arrow.prev{
+
+        left:.3rem;
+    }
+
+    .carousel-arrow.next{
+
+        right:.3rem;
     }
 
     .product-image{
@@ -1570,10 +1662,34 @@ footer p{
     </div>
 
 
-    <div
-        class="products"
-        id="products"
-    ></div>
+    <div class="carousel">
+
+        <button
+            class="carousel-arrow prev"
+            id="prevBtn"
+            onclick="scrollProducts(-1)"
+            aria-label="Anterior"
+        >
+            ‹
+        </button>
+
+
+        <div
+            class="products"
+            id="products"
+        ></div>
+
+
+        <button
+            class="carousel-arrow next"
+            id="nextBtn"
+            onclick="scrollProducts(1)"
+            aria-label="Siguiente"
+        >
+            ›
+        </button>
+
+    </div>
 
 </section>
 
@@ -2674,12 +2790,76 @@ document.addEventListener(
 
 
 /* =========================================
+   CARRUSEL DE PRODUCTOS
+========================================= */
+
+function scrollProducts(direction){
+
+    const track =
+        document.getElementById("products");
+
+    const first =
+        track.querySelector(".product");
+
+    if(!first){
+
+        return;
+
+    }
+
+    const step =
+        first.offsetWidth + 16; /* ancho de tarjeta + gap (1rem) */
+
+    track.scrollBy({
+        left: step * direction
+    });
+
+}
+
+
+function updateArrows(){
+
+    const track =
+        document.getElementById("products");
+
+    const prev =
+        document.getElementById("prevBtn");
+
+    const next =
+        document.getElementById("nextBtn");
+
+    if(!track || !prev || !next){
+
+        return;
+
+    }
+
+    prev.disabled =
+        track.scrollLeft <= 5;
+
+    next.disabled =
+        track.scrollLeft + track.clientWidth >=
+        track.scrollWidth - 5;
+
+}
+
+
+document
+    .getElementById("products")
+    .addEventListener("scroll", updateArrows);
+
+window.addEventListener("resize", updateArrows);
+
+
+/* =========================================
    INICIALIZAR
 ========================================= */
 
 renderProducts();
 
 renderCart();
+
+updateArrows();
 
 checkSession();
 
@@ -2709,3 +2889,4 @@ supabaseClient
 </body>
 
 </html>
+
