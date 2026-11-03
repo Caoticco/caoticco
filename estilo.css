@@ -1691,3 +1691,25 @@ body::before {
   flex-shrink: 0;
   scroll-snap-align: start;
 }
+
+} /* fin @media (max-width: 767px) */
+
+
+/* =========================================================
+   CARRUSEL DE PRODUCTOS — AJUSTES
+========================================================= */
+
+.products-scroll-button:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Pantallas grandes: 4 productos visibles, el resto se desliza */
+@media (min-width: 1024px) {
+
+  .products-track {
+    grid-auto-columns: calc((100% - 3rem) / 4);
+  }
+
+}
+
